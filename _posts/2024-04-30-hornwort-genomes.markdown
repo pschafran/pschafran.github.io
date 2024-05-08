@@ -31,8 +31,8 @@ categories: jekyll update
 <h2>Methods</h2>
 </section>
 
-<details>
-<summary>Code for mapping RNA reads and running BRAKER and processing output</summary>
+
+Code for mapping RNA reads and running BRAKER and processing output</summary>
 
 ```shell
 hisat2-build -p 12 PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta
@@ -69,7 +69,6 @@ with open("proteins.fasta", "r") as infile, open("bad_genes.lst", "w") as outfil
 			bad_genes.append(seqid)
 			outfile.write("%s\n" % seqid)
 ```
-</details>
 
 <section id="supplementary-info">
 <h2>Supplementary Info</h2>
