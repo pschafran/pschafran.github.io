@@ -35,6 +35,7 @@ plugins:
   - jekyll-feed
 
 redcarpet:
+  extensions: ["tables", "fenced_code_blocks"]
 
 # Exclude from processing.
 # The following items will not be processed, by default.
