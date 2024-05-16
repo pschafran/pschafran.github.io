@@ -13,15 +13,48 @@ categories: jekyll update
 <ol>
 <li><a href = "#abstract">Abstract</a></li>
 <li><a href = "#methods">Methods</a></li>
+	<ol type="a">
+		<li>Sequencing</li>
+		<li>Assembly</li>
+		<li>Scaffolding</li>
+		<li>Decomtamination</li>
+		<li>Repeat Annotation</li>
+		<li>Gene Prediction</li>
+		<li>Functional Annotation</li>
+		<li>Methylation</li>
+		<li>Orthogroup Inference</li>
+		<li>Synteny</li>
+		<li>Gene Expression</li>
+		<li>GO Term Enrichment</li>
+	</ol>
 <li><a href = "#results-and-discussion">Results and Discussion</a></li>
 </ol>
 </section> <!-- TOC end -->
+
+<section id="dependencies">
+<h2>Dependencies</h2>
+
+| Name | Link | Citation |
+|------|------|----------|
+|convertFastqToFasta.py|      | Custom |
+|extract_UnknownLTR.py|      | Custom |
+|trf2gff.py|      | Custom | 
+|getFastaSeqLengths.py|      | Custom |
+|renameFastaAndReorder.py|      | Custom |
+|renameGTF_Phytozome.py|      | Custom |
+|summaryStats.R|      | Custom |
+|      |      |          |
+|      |      |          |
+|      |      |          |
+|      |      |          |
+
+</section>
 
 <h2>Methods</h2>
 
 
 <section id="assembly">
-<h3>1. Assembly</h3>
+<h3>2b. Assembly</h3>
 <p>ONT reads less than 5 kbp were removed and the remainder were assembled with Flye v2.9:</p>
 
 ```shell
@@ -43,13 +76,17 @@ java -Xmx50G -jar pilon-1.24.jar --genome assembly.fasta --frags illumina.bam --
 ```
 
 <p>Three rounds of Pilon generally corrected >90% of all changes with diminishing returns (and possible over-polishing errors) with further rounds.</p>
+</section> <!--Assembly end-->
+
+<section id="scaffolding">
+<h3>2c. Scaffolding</h3>
 <p>HiC libraries were prepared, sequenced, and scaffolded by Phase Genomics (Seattle, WA). TGS-Gapcloser was used to fill gaps between scaffolds with ONT reads and polish filled gaps with Illumina data:</p>
 
 ```shell
 convertFastqToFasta.py ONT_reads.fq
-
+	
 cat Illumina_reads_R1.fq Illumina_reads_R2.fq > Illumina_reads_combined.fq
-
+	
 tgsgapcloser --scaff scaffolded_assembly.fasta \
     --reads ONT_reads.fasta \
     --ouput assembly.gapclosed
@@ -58,10 +95,14 @@ tgsgapcloser --scaff scaffolded_assembly.fasta \
     --samtools /usr/local/bin/samtools \ # Change to match your system
     --java /usr/bin/java # Change to match your system
 ```
-</section> <!--Assembly end-->
+</section> <!--Scaffolding end-->
+
+<section id="decontamination">
+<h3>2d. Decontamination</h3>
+</section> <!-- Decontamination end-->
 
 <section id="repeat-annotation">
-<h3>2. Repeat Annotation</h3>
+<h3>2e. Repeat Annotation</h3>
 <p>Repeats were identified in a first pass by EDTA v2:</p>
 
 ```shell
@@ -115,7 +156,7 @@ perl ProtExcluder1.1/ProtExcluder.pl uniprot_plant_blast.out PGA_assembly.gapclo
 RepeatMasker/util/buildSummary.pl -useAbsoluteGenomeSize PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.out > PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.repeat-summary.txt
 ```
 
-<h4>2a. Tandem Repeats Finder</h4>
+<b>Tandem Repeats Finder</b>
 <p>The software `tandem repeats finder` (TRF) can find additional tandem repeats that are associated with centromeres and telomeres.</p>
 
 <p>Run TRF:</p>
@@ -142,7 +183,7 @@ gff2bed < trf_out_min50.gff > trf_out_min50.bed
 </section> <!--Repeat annotation end-->
 
 <section id="gene-prediction">
-<h3>3. Gene Prediction</h3>
+<h3>2f. Gene Prediction</h3>
 <p>Gene models were predicted using BRAKER (), with input consisting of Illumina RNA reads mapped to the softmasked genome using HISAT2 () and predicted hornwort proteins from published <i>Anthoceros</i> genomes (Li et al 2020, Zhang et al. 2020). BRAKER output files were screened for genes with in-frame stop codons, which were marked as pseudogenes in the corresponding GTF file. Genes were renamed to contain their respective scaffold/contig name plus a number incremented by 100, restarting at the beginning of each scaffold/contig. Subsets of primary transcripts were created by selecting the longest transcript associated with each gene.
 </p><br>
 <b>Code for mapping RNA reads and running BRAKER and processing output</b><br>
@@ -165,8 +206,7 @@ braker.pl \
 ```
 
 <b>Filter genes with in-frame stop codons</b><br>
-<p>BRAKER will sometimes predict proteins that contain in-frame (internal) stop codons. In the BRAKER-produced CDS/AA FASTA files, the sequences in the bad regions are masked with N (CDS) or X (AA), but the GTF file will still contain annotation that creates a bad sequence. Following NCBI protocol for genes that are 'broken' but are not thought to be pseudogenes, these will get annotated with <code>pseudo=true</code>.
-The easiest starting point is the <code>bad_genes.lst</code> if you ran BRAKER with the <code>--nocleanup</code> option. If you didn't, make a new translation from the GTF:</p>
+<p>BRAKER will sometimes predict proteins that contain in-frame (internal) stop codons. In the BRAKER-produced CDS/AA FASTA files, the sequences in the bad regions are masked with N (CDS) or X (AA), but the GTF file will still contain annotation that creates a bad sequence. Following NCBI protocol for genes that are 'broken' but are not thought to be pseudogenes, these will get annotated with `pseudo=true`. The easiest starting point is the `bad_genes.lst` if you ran BRAKER with the `--nocleanup` option. If you didn't, make a new translation from the GTF:</p>
 
 ```shell
 gffread -y proteins.fasta -g genome.fasta augustus.hints.gtf
@@ -220,10 +260,24 @@ renameGTF_Phytozome.py -i augustus.hints.gtf --contig-table genome.fa_sequence_l
 
 </section> <!--Gene prediction end-->
 
-<section id="synteny">
-<h3>Synteny</h3>
+<section id="functional">
+<h3>2g. Functional Annotation</h3>
+</section>
 
+<section id="methylation">
+<h3>2h. Methylation</h3>
+</section>
+
+<section id="orthogroups">
+<h3>2i. Orthogroup Inference</h3>
+</section>
+
+<section id="synteny">
+<h3>2j. Synteny</h3>
 <b>Extracting syntenic blocks</b>
+<p>Synteny among hornwort genomes was inferred with GENESPACE. I attempted to run with other bryophyte genomes, but no synteny was found. </p>
+
+
 <p>Information about syntenic blocks was extracted from GENESPACE output file in <code>GENESPACE-DIR/results/syntenicBlock_coordinates.tsv</code>.</p>
 
 <p>To get stats about block size between pairs of genomes:</p>
@@ -235,6 +289,15 @@ grep "AnagrBONN" syntenicBlock_coordinates.csv | grep "AnagrOxford" | sed 's/,/\
 <p>Note that the sort and uniq commands are used to avoid double-counting the same block in both orientations.</p>
 
 </section> <!--Synteny end-->
+
+<section id="orthogroups">
+<h3>2k. Gene Expression</h3>
+</section>
+
+<section id="orthogroups">
+<h3>2l. GO Term Enrichment</h3>
+</section>
+
 
 <section id="results-and-discussion">
 <h2>Results and Discussion</h2>
