@@ -25,7 +25,7 @@ categories: jekyll update
 
 <section id="assembly">
 <h3>1. Assembly</h3>
-<p>ONT reads less than 5 kbp were removed and the remainder were assembled with Flye v2.9:</p>
+<p>ONT reads less than 5 kbp were removed and the remainder were assembled with Flye v2.9:
 
 ```
 awk 'BEGIN {FS = "\t" ; OFS = "\n"} {header = $0 ; getline seq ; getline qheader ; getline qseq ; if (length(seq) >= 5000) {print header, seq, qheader, qseq}}' < your.fastq > filtered.fastq
@@ -33,7 +33,8 @@ awk 'BEGIN {FS = "\t" ; OFS = "\n"} {header = $0 ; getline seq ; getline qheader
 flye --nano-hq filtered.fastq -t 24 -o flye 
 ```
 
-<p>Contigs were corrected with Illumina DNA sequence data using Pilon v1.24 in three iterations, with the Pilon output as input each successive round:</p>
+Contigs were corrected with Illumina DNA sequence data using Pilon v1.24 in three iterations, with the Pilon output as input each successive round:</p>
+
 
 ```
 bwa index assembly.fasta
@@ -41,6 +42,7 @@ bwa mem -t 24 assembly.fasta Illumina_reads_R1.fq Illumina_reads_R2.fq | samtool
 minimap2 -t 24 assembly.fasta ONT_reads.fq | samtools sort -o ont.bam
 java -Xmx50G -jar pilon-1.24.jar --genome assembly.fasta --frags illumina.bam --nanopore ont.bam --output pilon
 ```
+
 
 <p>Three rounds of Pilon generally corrected >90% of all changes with diminishing returns (and possible over-polishing errors) with further rounds.</p>
 <p>HiC libraries were prepared, sequenced, and scaffolded by Phase Genomics (Seattle, WA). TGS-Gapcloser was used to fill gaps between scaffolds with ONT reads and polish filled gaps with Illumina data: </p>
@@ -238,7 +240,7 @@ grep "BONN" syntenicBlock_coordinates.csv | grep "Oxford" | sed 's/,/\t/g' | cut
 
 <section id="results-and-discussion">
 <h2>Results and Discussion</h2>
-</section <!--Results-discussion end>
+</section> <!--Results-discussion end>
 
 
 
