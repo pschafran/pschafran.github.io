@@ -34,6 +34,7 @@ theme: minima
 plugins:
   - jekyll-feed
 
+markdown: kramdown
 redcarpet:
   extensions: ["tables", "fenced_code_blocks"]
 
