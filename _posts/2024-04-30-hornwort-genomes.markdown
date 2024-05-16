@@ -8,13 +8,15 @@ categories: jekyll update
 <p>Intial Post Date: 2024-04-30</p>
 </section>
 
-<section id="main">
+<section id="toc">
 <h2>Table of Contents</h2>
-
-1. <a href = "#abstract">Abstract</a>
-2. <a href = "#methods">Methods</a>
-3. <a href = "#results-and-discussion">Results and Discussion</a>
-4. <a href = "#supplementary-info">Supplementary Info</a>
+<ol>
+<li><a href = "#abstract">Abstract</a></li>
+<li><a href = "#methods">Methods</a></li>
+<li><a href = "#results-and-discussion">Results and Discussion</a></li>
+<li><a href = "#supplementary-info">Supplementary Info</a></li>
+</ol>
+</section> <!-- TOC end -->
 
 <section id="abstract">
 <h2>Abstract</h2>
@@ -242,12 +244,9 @@ grep "BONN" syntenicBlock_coordinates.csv | grep "Oxford" | sed 's/,/\t/g' | cut
 
 <section id="results-and-discussion">
 <h2>Results and Discussion</h2>
-</section> <!--Results-discussion end>
-
-
+</section> <!--Results-discussion end-->
 
 <section id="supplementary-info">
 <h2>Supplementary Info</h2>
-</section>
+</section> <!--Supplement end-->
 
-</section> <!--Main end-->
