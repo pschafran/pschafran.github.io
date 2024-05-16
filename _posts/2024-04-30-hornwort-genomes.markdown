@@ -28,28 +28,28 @@ categories: jekyll update
 <p>ONT reads less than 5 kbp were removed and the remainder were assembled with Flye v2.9:</p>
 
 
-{% %}
+```
 awk 'BEGIN {FS = "\t" ; OFS = "\n"} {header = $0 ; getline seq ; getline qheader ; getline qseq ; if (length(seq) >= 5000) {print header, seq, qheader, qseq}}' < your.fastq > filtered.fastq
 
 flye --nano-hq filtered.fastq -t 24 -o flye 
-{% %}
+```
 
 
 Contigs were corrected with Illumina DNA sequence data using Pilon v1.24 in three iterations, with the Pilon output as input each successive round:</p>
 
 
-{% %}
+```
 bwa index assembly.fasta
 bwa mem -t 24 assembly.fasta Illumina_reads_R1.fq Illumina_reads_R2.fq | samtools sort -o illumina.bam
 minimap2 -t 24 assembly.fasta ONT_reads.fq | samtools sort -o ont.bam
 java -Xmx50G -jar pilon-1.24.jar --genome assembly.fasta --frags illumina.bam --nanopore ont.bam --output pilon
-{% %}
+```
 
 
 <p>Three rounds of Pilon generally corrected >90% of all changes with diminishing returns (and possible over-polishing errors) with further rounds.</p>
 <p>HiC libraries were prepared, sequenced, and scaffolded by Phase Genomics (Seattle, WA). TGS-Gapcloser was used to fill gaps between scaffolds with ONT reads and polish filled gaps with Illumina data: </p>
 
-{% %}
+```
 convertFastqToFasta.py ONT_reads.fq
 cat Illumina_reads_R1.fq Illumina_reads_R2.fq > Illumina_reads_combined.fq
 tgsgapcloser --scaff scaffolded_assembly.fasta \
@@ -59,7 +59,7 @@ tgsgapcloser --scaff scaffolded_assembly.fasta \
     --pilon /home/ps997/bin/pilon-1.24.jar \ # Change to match your system
     --samtools /usr/local/bin/samtools \ # Change to match your system
     --java /usr/bin/java # Change to match your system
-{% %}
+```
 
 </section> <!--Assembly end-->
 
@@ -67,17 +67,17 @@ tgsgapcloser --scaff scaffolded_assembly.fasta \
 <h3>2. Repeat Annotation</h3>
 <p>Repeats were identified in a first pass by EDTA v2:</p>
 
-{% %}
+```
 EDTA.pl --sensitive 1 --anno 1 --evaluate 1 -t 12 \
 --genome scaffolded_assembly.gapclosed.scaff_seqs.fasta \
 --repeatmasker /home/ps997/bin/RepeatMasker/RepeatMasker \ # Change to match your system
 --cds ~/HornwortBase_20210503/SPECIES_CDS.fna \ # OPTIONAL: I used these because I already had predicted CDS sequences from a previous round of annotation
 &> edta.out # Capture the output for potential debugging
-{% %}
+```
 
 <p>NOTE: EDTA doesn't like long sequence names, you might have to rename them first with some simple Python code:</p>
 
-{% %}
+```
 infile = open("PGA_assembly.gapclosed.scaff_seqs","r")
 outfile = open("PGA_assembly.gapclosed.scaff_seqs.renamed.fasta","w")
 counter = 1
@@ -87,11 +87,11 @@ for line in infile:
 		counter += 1
 	else:
 		outfile.write("%s" % line)
-{% %} 
+``` 
 
 <p>OPTIONAL: EDTA is mostly used as a stand-alone tool these days, but some additional processing may improve the transposable element (TE) library. These steps aim to recover protein-coding genes that were misidentified as LTRs, following steps from the <a href="https://weatherby.genetics.utah.edu/MAKER/wiki/index.php/Repeat_Library_Construction-Advanced">MAKER wiki</a>. Search databases are linked at the bottom of that page.</p>
 
-{% %}
+```
 # Pull out LTRs not identified as Copia or Gypsy type from the EDTA TE library
 extract_unknownLTR.py PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa
 
@@ -116,28 +116,28 @@ perl ProtExcluder1.1/ProtExcluder.pl uniprot_plant_blast.out PGA_assembly.gapclo
 
 # Calculate stats
 RepeatMasker/util/buildSummary.pl -useAbsoluteGenomeSize PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.out > PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.repeat-summary.txt
-{% %}
+```
 
 <h4>2a. Tandem Repeats Finder</h4>
 <p>The software `tandem repeats finder` (TRF) can find additional tandem repeats that are associated with centromeres and telomeres.</p>
 
 <p>Run TRF:</p>
 
-{% %}
+```
 trf Phymatoceros_genome_Phase_scaffolded.fasta 2 7 7 80 10 50 2000 -h -d -m -ngs > trf_out.txt
-{% %}
+```
 <p>Convert TRF output to GFF and BED formats:</p>
 
-{% %}
+```
 trf2gff.py trf_out.txt 50 > trf_out_min50.gff
 awk -F"\t" '{print $1"\t"$2"\ttandem_repeat\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9}' trf_out_min50.gff > trf_out_min50.renamed.gff
 gff2bed < trf_out_min50.gff > trf_out_min50.bed
-{% %}
+```
 <p>TRF will find elements already identified by EDTA. To filter those out, we can remove the overlapping items:</p>
 
-{% %}
+```
 
-{% %}
+```
 
 </section> <!--Repeat annotation end-->
 
@@ -147,11 +147,11 @@ gff2bed < trf_out_min50.gff > trf_out_min50.bed
 </p><br>
 <b>Code for mapping RNA reads and running BRAKER and processing output</b><br>
 
-{% %}shell
+```shell
 hisat2-build -p 12 PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta
 hisat2 -p 12 -x PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta -1 RNA_R1.fq.gz -2 RNA_R2.fq.gz 2> hisat-align.out | samtools sort -o PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.RNAmapped.bam
-{% %}
-{% %}
+```
+```
 braker.pl \
 --genome PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta \
 --bam PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.RNAmapped.bam \
@@ -161,19 +161,19 @@ braker.pl \
 --cores 12 \
 --nocleanup \
 --softmasking \
-{% %}
+```
 
 <b>Filter genes with in-frame stop codons</b><br>
 <p>BRAKER will sometimes predict proteins that contain in-frame (internal) stop codons. In the BRAKER-produced CDS/AA FASTA files, the sequences in the bad regions are masked with N (CDS) or X (AA), but the GTF file will still contain annotation that creates a bad sequence. Following NCBI protocol for genes that are 'broken' but are not thought to be pseudogenes, these will get annotated with `pseudo=true`.
 The easiest starting point is the `bad_genes.lst` if you ran BRAKER with the `--nocleanup` option. If you didn't, make a new translation from the GTF:</p>
 
-{% %}
+```
 gffread -y proteins.fasta -g genome.fasta augustus.hints.gtf
-{% %}
+```
 
 Then search for sequences with periods (representing stop codons), and write them to `bad_genes.lst`
 
-{% %}
+```
 with open("proteins.fasta", "r") as infile, open("bad_genes.lst", "w") as outfile:
 	bad_genes = []
 	for line in infile:
@@ -182,7 +182,7 @@ with open("proteins.fasta", "r") as infile, open("bad_genes.lst", "w") as outfil
 		elif "." in line and seqid not in bad_genes:
 			bad_genes.append(seqid)
 			outfile.write("%s\n" % seqid)
-{% %}
+```
 
 <b>Rename Contigs and Genes</b>
 <p>You'll probably want to rename the contigs and genes in the fasta and gff/gtf files associated with each genome. The input genome and any annotations must match (e.g. can't use RepeatModeler annotations if you renamed the genome for EDTA). Here it may be advisable to add a unique ID or version number to link this particular genome assembly and annotation. Comment lines can be added to the header of the final GFF/GTF and fasta metadata can be added to sequence names. In this example, I start with the genome that was temporarily renamed to run EDTA.</p>
@@ -194,7 +194,7 @@ with open("proteins.fasta", "r") as infile, open("bad_genes.lst", "w") as outfil
 	<li>Transcripts: Gene ID + "." + transcript number (increments by 1).</li>
 </ol>
 
-{% %}bash
+```bash
 # To hash the date for a unique ID
 md5sum <(date)
 6cde96438c2e713efa5c285e4fe3a62d
@@ -213,7 +213,7 @@ renameFastaAndReorder.py PGA_assembly.gapcloser.scaff_seqs.renamed.fasta genome.
 # Rename a BRAKER GTF file
 renameGTF_Phytozome.py -i augustus.hints.gtf --contig-table genome.fa_sequence_lengths.tsv.new_contig_names.tsv --assembly-id 6cde96438c2e713efa5c285e4fe3a62d
 
-{% %}
+```
 
 
 
@@ -230,9 +230,9 @@ renameGTF_Phytozome.py -i augustus.hints.gtf --contig-table genome.fa_sequence_l
 
 <p>To get stats about block size between pairs of genomes:</p>
 
-{% %}
+```
 grep "BONN" syntenicBlock_coordinates.csv | grep "Oxford" | sed 's/,/\t/g' | cut -f 5,12 | sort | uniq | cut -f 2 | summaryStats.R
-{% %}
+```
 
 <p>Note that the sort and uniq commands are used to avoid double-counting the same block in both orientations.</p>
 
