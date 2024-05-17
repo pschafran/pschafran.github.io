@@ -17,7 +17,7 @@ categories: jekyll update
 		<li>Sequencing</li>
 		<li>Assembly</li>
 		<li>Scaffolding</li>
-		<li>Decomtamination</li>
+		<li>Decontamination</li>
 		<li>Repeat Annotation</li>
 		<li>Gene Prediction</li>
 		<li>Functional Annotation</li>
@@ -32,7 +32,7 @@ categories: jekyll update
 </section> <!-- TOC end -->
 
 <section id="dependencies">
-<h2>Dependencies</h2>
+<h2>Dependencies and Scripts</h2>
 
 | Name | Link | Citation |
 |------|------|----------|
@@ -40,6 +40,7 @@ categories: jekyll update
 |extract_UnknownLTR.py|      | Custom |
 |trf2gff.py|      | Custom | 
 |getFastaSeqLengths.py|      | Custom |
+|renameFasta.py |     | Custom |
 |renameFastaAndReorder.py|      | Custom |
 |renameGTF_Phytozome.py|      | Custom |
 |summaryStats.R|      | Custom |
@@ -236,16 +237,12 @@ with open("proteins.fasta", "r") as infile, open("bad_genes.lst", "w") as outfil
 </ol>
 
 ```shell
-# To hash the date for a unique ID
-md5sum <(date)
-6cde96438c2e713efa5c285e4fe3a62d
-
 # Get the length of all sequences in order to rename from shortest to longest
 getFastaSeqLengths.py PGA_assembly.gapcloser.scaff_seqs.renamed.fasta
 sort -k2,2nr PGA_assembly.gapcloser.scaff_seqs.renamed.fasta_sequence_lengths.tmp > genome.fa_sequence_lengths.tsv.sorted.tmp
 
-# Change "j" to the part of the names that will be the same in all sequences. Change "id" if using a unique ID for this genome and its annotations
-awk -F"\t" -v i="1" -v j="AnagrOXF.C" -v id="6cde96438c2e713efa5c285e4fe3a62d" '{ print $1"\t"j""i++" id="id }' genome.fa_sequence_lengths.tsv.sorted.tmp > genome.fa_sequence_lengths.tsv.new_contig_names.tsv
+# Change "j" to the prefix of the names that will be the same in all sequences. Change "id" if using a unique ID for this genome and its annotations
+awk -F"\t" -v i="1" -v j="AnagrOXF.C" -v id="v1" '{ print $1"\t"j""i++" id="id }' genome.fa_sequence_lengths.tsv.sorted.tmp > genome.fa_sequence_lengths.tsv.new_contig_names.tsv
 
 ### NOTE: Here I manually edit the *new_contig_names.tsv file to change scaffold/contig designations
 renameFastaAndReorder.py PGA_assembly.gapcloser.scaff_seqs.renamed.fasta genome.fa_sequence_lengths.tsv.new_contig_names.tsv
@@ -266,6 +263,139 @@ renameGTF_Phytozome.py -i augustus.hints.gtf --contig-table genome.fa_sequence_l
 
 <section id="methylation">
 <h3>2h. Methylation</h3>
+<p>Methylation was called using Oxford Nanopore Technology's `megalodon`:</p>
+
+```shell
+megalodon ../nanopore_reads/ --guppy-config dna_r9.4.1_450bps_hac.cfg --remora-modified-bases dna_r9.4.1_e8 hac 0.0.0 5mc CG 0 --outputs basecalls mappings mods --reference ../genome/genome.fasta --devices 0 --processes 12 --guppy-server-path /usr/bin/guppy_basecall_server
+```
+
+<p><b>WARNING!</b> The BED file produced by megalodon is not sorted -- if you use it for downstream analysis it will give inaccurate results. To sort:</p>
+
+```shell
+bedtools sort -i modified_bases.5mC.bed > modified_bases.5mC.sorted.bed
+```
+
+<p>Column 10 is the read depth at a particular site; column 11 is the % of those reads that had a CG modification. Most of the filtering will be done on those two metrics. For example, you may want to remove sites with no coverage so they don't overrepresent the propartion of unmethylated sites in the genome:</p>
+
+```shell
+awk -F"\t" '{if ($10 == 0) print $0}' modified_bases.5mC.sorted.bed > modified_bases.5mC.sorted.rmMissing.bed
+```
+
+<p>Comparing methylated sites and genome features also requires a GFF format file for the features of interest.</p>
+<br>
+<p><b>Gene Body Methylation</b></p>
+<p>This section calculated the rate of methylated CG sites over gene exons and adjacent upstream/downstream non-coding regions. Some important caveats for my approach:</p>
+<ul>
+	<li>Only hornwort annotations produced by BRAKER have been tested</li>
+	<li>Some field values (esp. GFF column 3) may be different in other genomes</li>
+	<li>"gene" objects are expected to represent only the gene body between start and stop codons (inclusive), not UTRs. On gene lines in the GFF file, field 9 must be ID=geneID, where geneID is whatever unique identifier they have. The gene ID cannot be a substring of another element in the annotation file. E.g. genes labeled g10 and g100 cannot be used (otherwise grep commands will find the wrong matches)</li>
+	<li>"exon" objects are expected to represent just the parts that make up the CDS. They must include the parent gene ID somewhere in field 9</li>
+</ul>	
+<p>First, some setup:</p>
+
+```shell
+# Make a list of gene IDs, used for searching later
+awk -F"\t" '{ if ($3 == "gene") print $9}' gene_annotations.gff | cut -f 2 -d "=" >> geneIDs.txt
+
+# Make subdirectories for new files
+mkdir genes
+mkdir exons
+mkdir upstream_1kb
+mkdir downstream_1kb
+```
+
+<p>Next, get just the "gene" lines out of the GFF, making a new file for each gene in the `./genes/` directory:</p>
+
+```shell
+cat geneIDs.txt | while read i ; do grep "$i" gene_annotations.gff | awk -F"\t" '{ if ($3 == "gene") print $0}' > genes/"$i".gff ; done
+```
+
+<p>Get just the exon lines from the main GFF, put into one new file in the `./exons` directory:</p>
+
+```shell
+awk -F"\t" '{ if ($3 == "exon") print $0}' gene_annotations.gff | sortBed -i - | bedtools merge -i - > exons/exons.bed
+```
+
+<p>Calculate the upstream and downstream 1kb regions for each gene. The long `awk` command simply looks at the orientation of the gene, then adds or subtracts 1000 to the gene region as appropriate, and formats the new region in GFF format.</p>
+
+```shell
+awk -F"\t" '{ if ($3 == "gene" && $7 == "+") print $1"\t"$2"\tupstream\t"($4-1000)"\t"$4"\t"$6"\t"$7"\t"$8"\t"$9; else if ($3 =="gene" && $7 == "-" ) print ($1"\t"$2"\tupstream\t"$5"\t"($5+1000)"\t"$6"\t"$7"\t"$8"\t"$9) }' gene_annotations.gff > upstream_1kb/upstream.gff
+awk -F"\t" '{ if ($3 == "gene" && $7 == "+") print $1"\t"$2"\tdownstream\t"$5"\t"($5+1000)"\t"$6"\t"$7"\t"$8"\t"$9; else if ($3 == "gene" && $7 == "-" ) print ($1"\t"$2"\tdownstream\t"$4-1000"\t"$4"\t"$6"\t"$7"\t"$8"\t"$9) }' gene_annotations.gff > downstream_1kb/downstream.gff
+```
+
+<p>Remove any negative values from the upstream/downstream regions (for genes near ends of sequences):</p>
+
+```shell
+awk -F"\t" '{ if ($4 < 1) print $1"\t"$2"\t"$3"\t1\t"$5"\t"$6"\t"$7"\t"$8"\t"$9; else print $0}' upstream_1kb/upstream.gff > upstream_1kb/upstream.pos.gff
+awk -F"\t" '{ if ($4 < 1) print $1"\t"$2"\t"$3"\t1\t"$5"\t"$6"\t"$7"\t"$8"\t"$9; else print $0}' downstream_1kb/downstream.gff > downstream_1kb/downstream.pos.gff
+```
+<p>Now that all the gene region files are ready, we can start to intersect those regions with the 5mC CG modifications BED file:</p>
+
+```shell
+bedtools intersect -a modified_bases.5mC.sorted.bed -b exons/exons.bed > exons/exons.CpG.bed
+bedtools intersect -a modified_bases.5mC.sorted.bed -b upstream_1kb/upstream.pos.gff > upstream_1kb/upstream.CpG.bed
+bedtools intersect -a modified_bases.5mC.sorted.bed -b downstream_1kb/downstream.pos.gff > downstream_1kb/downstream.CpG.bed
+```
+
+<p>Since sites with low coverage may innaccurately represent their true % modification, you may want to remove them. The cutoff will vary depending on your experiment and sequencing depth. This example requires at least 5 reads per site, in a dataset with median sequencing depth of ~50X.</p>
+
+```shell
+awk -F"\t" '{if ($10 >= 5) print $1"\t"$2"\t"$3"\t"$4"\t"$11}' exons/exons.CpG.bed > exons/exons.CpG.filt.bed
+awk -F"\t" '{if ($10 >= 5) print $1"\t"$2"\t"$3"\t"$4"\t"$11}' upstream_1kb/upstream.CpG.bed > upstream_1kb/upstream.CpG.filt.bed
+awk -F"\t" '{if ($10 >= 5) print $1"\t"$2"\t"$3"\t"$4"\t"$11}' downstream_1kb/downstream.CpG.bed > downstream_1kb/downstream.CpG.filt.bed
+```
+
+<p>Next, the CG modifications are averaged over portions of each sequence. In upstream/downstream regions, 100 bp windows are used (`-n 10`); since gene lengths vary, each gene is broken into 20 windows (`-n 20`) that will vary in size between genes. Having an equal number of windows is necessary to be able to "stack" all the genes for comparison.</p>
+<p>WARNING: These steps are slow (at least several minutes). Do within exons, upstream_1kb, and downstream_1kb directories:</p>
+
+```shell
+# For upstream/downstream:
+cat ../geneIDs.txt | while read i ; do grep "$i" upstream.pos.gff | bedtools makewindows -n 10 -b - | sortBed -i - | bedmap --echo --mean - upstream.CpG.filt.bed | sed -e 's/|/\t/g' | awk -F"\t" '{print $1"\t"$2"\t"$3"\t"$4}' > "$i".windowavg.bed ; done
+cat ../geneIDs.txt | while read i ; do grep "$i" downstream.pos.gff | bedtools makewindows -n 10 -b - | sortBed -i - | bedmap --echo --mean - downstream.CpG.filt.bed | sed -e 's/|/\t/g' | awk -F"\t" '{print $1"\t"$2"\t"$3"\t"$4}' > "$i".windowavg.bed ; done
+# For exons:
+cat ../geneIDs.txt | while read i ; do bedtools makewindows -n 20 -b ../genes/"$i".gff | sortBed -i - | bedmap --echo --mean - exons.CpG.filt.bed | sed -e 's/|/\t/g' | awk -F"\t" '{print $1"\t"$2"\t"$3"\t"$4}' > "$i".windowavg.bed ; done
+```
+
+<p>Reorient genes so they're all in the same direction. Repeat in each upsteam, downstream, exons directory.</p>
+```shell
+cat ../geneIDs.txt | while read i ; do grep "$i" ../gene_annotations.gff | grep -w "gene" | if [ $(cut -f 7) == "+" ] ; then cat "$i".windowavg.bed > "$i".windowavg.oriented.bed ; else tac "$i".windowavg.bed > "$i".windowavg.oriented.bed; fi ; done
+```
+
+<p>Remove any genes that were too short or pseudogenes and did not produce output:</p>
+
+```shell
+find . -size 0 -delete
+```
+
+<p>Convert everything into long-data format to send to R for plotting. Do this in the directory above the separate exons, upstream, and downstream ones.</p>
+
+```shell
+for i in upstream_1kb/*oriented.bed ; do awk -F"\t" -v j=1 '{print j++"\t"$4}' "$i"  >> combined.tsv ; done
+for i in exons/*oriented.bed ; do awk -F"\t" -v j=11 '{print j++"\t"$4}' "$i"  >> combined.tsv ; done
+for i in downstream_1kb/*oriented.bed ; do awk -F"\t" -v j=31 '{print j++"\t"$4}' "$i"  >> combined.tsv ; done
+
+# Remove any missing data
+awk -F"\t" '{ if ($2 != "NAN") print $0}' combined.tsv > combined.rmNA.tsv
+```
+
+<p>Import the data into R to produce a line plot of the averaged CG methylation:</p>
+
+```R
+library(ggplot2)
+library(dplyr)
+combined <- read.delim("combined.rmNA.tsv", header = F, sep = "\t")
+
+combinedPlot <- ggplot(data = combined, aes(x=combined$V1, y=combined$V2)) +
+  stat_summary(fun.min = function(z) { quantile(z,0.25) },
+               fun.max = function(z) { quantile(z,0.75) },
+               fun = median, geom = "line", color = "red") + 
+  ylab("Median % CG modification") +
+  xlab("") +
+  ylim(0,100) +
+combinedPlot +theme_bw() + scale_x_continuous(breaks = c(1,11,30,40), labels=c("1" = "-1 Kbp", "11" = "Start", "30" = "Stop", "40" = "+1 Kbp"))
+```
+
+
 </section>
 
 <section id="orthogroups">
@@ -275,10 +405,51 @@ renameGTF_Phytozome.py -i augustus.hints.gtf --contig-table genome.fa_sequence_l
 <section id="synteny">
 <h3>2j. Synteny</h3>
 <b>Extracting syntenic blocks</b>
-<p>Synteny among hornwort genomes was inferred with GENESPACE. I attempted to run with other bryophyte genomes, but no synteny was found. </p>
+<p>Synteny among hornwort genomes was inferred with GENESPACE. I attempted to run with other bryophyte genomes, but no synteny was found.</p>
+
+<p>Primary transcript protein FASTAs were downloaded from HornwortBase, Phytozome, CoGe, and other sources. Because naming scemes across GFF/FASTA pairs varies, each genome had to be manually inspected and different methods developed to match the sequence names in the FASTA with the GFF entries. GFFs then need to be subsetted so there is a single entry per sequence in the FASTA. Finally, GFF files were converted into a simplified 4-column BED format, and FASTA and BED files were renamed to match each other.</p>
+
+<p><b>Convert Phytozome FASTAs</b></p>
+
+```shell
+grep ">" CpurpureusGG1_539_v1.1.protein_primaryTranscriptOnly.fa | awk -F" |=" '{print $0"\t"$7}' > Ceratodon_purpureus_GG1.convert.tsv
+
+renameFasta.py CpurpureusGG1_539_v1.1.protein_primaryTranscriptOnly.fa Ceratodon_purpureus_GG1.convert.tsv
+
+mv CpurpureusGG1_539_v1.1.protein_primaryTranscriptOnly_renamed.fa Ceratodon_purpureus_GG1.fa
+```
+
+<p><b>Convert GFF to simplified BED</b></p>
+For Phytozome:
+
+```shell
+grep -w "gene" Ppatens_318_v3.3.gene.gff3 | gff2bed | awk -F"\t|=|;" '{print $1"\t"$2"\t"$3"\t"$13}' > Ppatens_318_v3.3.gene.bed  
+```
+
+For HornwortBase:
+
+```shell
+grep -w "gene" Anthoceros_agrestis_Oxford_gene_annotations.gff | gff2bed | awk -F"\t|=|;" '{print $1"\t"$2"\t"$3"\t"$11}' > Anthoceros_agrestis_Oxford.bed
+```
+
+<p><b>Run Genespace</b></p>
+
+```shell
+conda activate orthofinder
+```
+
+In R:
+```R
+library(GENESPACE)
+gpar <- init_genespace(wd = "/media/peter/WD14TB-2/projects/hornwort_genomes/analysis/synteny/genespace", path2mcscanx = "~/bin/MCScanX/"
+out <- run_genespace(gsParam = gpar)
+```
 
 
-<p>Information about syntenic blocks was extracted from GENESPACE output file in <code>GENESPACE-DIR/results/syntenicBlock_coordinates.tsv</code>.</p>
+
+
+<b></b>
+<p>Information about syntenic blocks was extracted from GENESPACE output file in `GENESPACE-DIR/results/syntenicBlock_coordinates.tsv`.</p>
 
 <p>To get stats about block size between pairs of genomes:</p>
 
