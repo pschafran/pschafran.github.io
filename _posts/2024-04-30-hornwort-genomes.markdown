@@ -100,6 +100,41 @@ tgsgapcloser --scaff scaffolded_assembly.fasta \
 
 <section id="decontamination">
 <h3>2d. Decontamination</h3>
+<p>Scaffolded assemblies were checked for contamination using a combination of HiC contact heatmaps and <a href="https://blobtoolkit.genomehubs.org/blobtools2/">BlobTools2</a>. Illumina WGS reads were mapped to each genome with bwa; scaffold sequences were BLASTed against the NCBI nt database. BAM alignment and BLAST output were added into a BlobDir along with each genome.</p>
+
+```shell
+bwa mem -t 24 scaffolded_assembly.fasta reads_1.fastq.gz reads_2.fastq.gz | samtools sort -o scaffolded_assembly.readsMapped.bam
+
+blastn -db nt \ # Database needs to be downloaded from NCBI. Change path to match your system
+       -query scaffolded_assembly.fasta \
+       -outfmt "6 qseqid staxids bitscore std" \
+       -max_target_seqs 10 \
+       -max_hsps 1 \
+       -evalue 1e-25 \
+       -num_threads 16 \
+       -out blast.out
+       
+blobtools create \
+    --fasta scaffolded_assembly.fasta \
+    --cov assembly.reads.bam \
+    --hits blast.out \
+    --taxrule bestsumorder \
+    --taxdump ~/taxdump \ # File needs to be downloaded from NCBI ftp://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz and unpacked. Change path to match your system 
+    AssemblyName
+    
+blobtools view --interactive
+```
+
+<p>Open an interactive viewer. The coverage vs. %GC vs. BLAST hit graph is most informative -- look for obvious outliers. I require at least two of the three criteria to differ from the primary genome to call a likely contaminant sequence. Then check likely contaminants in the HiC heatmap with JuiceBox Assembly Tools (JBAT). Contaminants should show no contact with the primary genome. If there is contact, consider other explanations e.g. HGT, misassembly. A new FASTA get be made using a custom script:</p>
+
+```
+getFromFasta.py scaffolded_assembly.fasta scaffold100 > contaminant.fasta
+
+getFromFasta.py -v scaffolded_assembly.fasta scaffold100 > scaffolded_assembly.no_contaminants.fasta
+```
+
+
+
 </section> <!-- Decontamination end-->
 
 <section id="repeat-annotation">
@@ -108,7 +143,7 @@ tgsgapcloser --scaff scaffolded_assembly.fasta \
 
 ```shell
 EDTA.pl --sensitive 1 --anno 1 --evaluate 1 -t 12 \
---genome scaffolded_assembly.gapclosed.scaff_seqs.fasta \
+--genome scaffolded_assembly.fasta \
 --repeatmasker /home/ps997/bin/RepeatMasker/RepeatMasker \ # Change to match your system
 --cds ~/HornwortBase_20210503/SPECIES_CDS.fna \ # OPTIONAL: I used these because I already had predicted CDS sequences from a previous round of annotation
 &> edta.out # Capture the output for potential debugging
@@ -117,8 +152,8 @@ EDTA.pl --sensitive 1 --anno 1 --evaluate 1 -t 12 \
 <p>NOTE: EDTA doesn't like long sequence names, you might have to rename them first with some simple Python code:</p>
 
 ```python
-infile = open("PGA_assembly.gapclosed.scaff_seqs","r")
-outfile = open("PGA_assembly.gapclosed.scaff_seqs.renamed.fasta","w")
+infile = open("scaffolded_assembly.fasta","r")
+outfile = open("scaffolded_assembly.renamed.fasta","w")
 counter = 1
 for line in infile:
 	if line.startswith(">"):
@@ -132,29 +167,29 @@ for line in infile:
 
 ```shell
 # Pull out LTRs not identified as Copia or Gypsy type from the EDTA TE library
-extract_unknownLTR.py PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa
+extract_unknownLTR.py scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa
 
 # BLAST search the unknown LTRs against a curated database of transposons
-blastx -query PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa -db Tpases020812 -evalue 1e-10 -num_descriptions 10 -out PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa.blastx -num_threads 12
+blastx -query scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa -db Tpases020812 -evalue 1e-10 -num_descriptions 10 -out scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa.blastx -num_threads 12
 
 # Parse the BLAST results and identify unknown LTRs with hits to known transposons
-perl Custom-Repeat-Library/transposon_blast_parse.pl --blastx PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa.blastx --modelerunknown PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa
+perl Custom-Repeat-Library/transposon_blast_parse.pl --blastx  scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa.blastx --modelerunknown scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa
 
 # Combine the LTRs that have BLAST hits to the main LTR library file. Rename the unknown LTRs file. 
-cat PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.fa identified_elements.txt > PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa
-mv unknown_elements.txt PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.final.fa
+cat scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.fa identified_elements.txt > scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa
+mv unknown_elements.txt scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.final.fa
 
 # BLAST search the LTR library against UNIPROT plant protein database. 
-blastx -db uniprot_sprot_plants.fasta -query PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa -out uniprot_plant_blast.out -num_threads 12
+blastx -db uniprot_sprot_plants.fasta -query scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa -out uniprot_plant_blast.out -num_threads 12
 
 # Parse the BLAST results and remove LTRs that matched plant proteins.
-perl ProtExcluder1.1/ProtExcluder.pl uniprot_plant_blast.out PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa
+perl ProtExcluder1.1/ProtExcluder.pl uniprot_plant_blast.out scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa
 
 # Mask the repeats in the genome using this new LTR library. The `--xsmall` option softmasks the genome, which is preferred by BRAKER. 
-/home/ps997/bin/RepeatMasker/RepeatMasker -noisy -a -gff -u -pa 24 --xsmall -lib PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fanoProtFinal PGA_assembly.gapcloser.scaff_seqs.renamed.fasta
+/home/ps997/bin/RepeatMasker/RepeatMasker -noisy -a -gff -u -pa 24 --xsmall -lib scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fanoProtFinal scaffolded_assembly.renamed.fasta
 
 # Calculate stats
-RepeatMasker/util/buildSummary.pl -useAbsoluteGenomeSize PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.out > PGA_assembly.gapcloser.scaff_seqs.renamed.fasta.repeat-summary.txt
+RepeatMasker/util/buildSummary.pl -useAbsoluteGenomeSize scaffolded_assembly.renamed.fasta.out > scaffolded_assembly.renamed.fasta.repeat-summary.txt
 ```
 
 <b>Tandem Repeats Finder</b>
@@ -163,7 +198,7 @@ RepeatMasker/util/buildSummary.pl -useAbsoluteGenomeSize PGA_assembly.gapcloser.
 <p>Run TRF:</p>
 
 ```shell
-trf Phymatoceros_genome_Phase_scaffolded.fasta 2 7 7 80 10 50 2000 -h -d -m -ngs > trf_out.txt
+trf scaffolded_assembly.renamed.fasta 2 7 7 80 10 50 2000 -h -d -m -ngs > trf_out.txt
 ```
 
 <p>Convert TRF output to GFF and BED formats:</p>
@@ -190,14 +225,14 @@ gff2bed < trf_out_min50.gff > trf_out_min50.bed
 <b>Code for mapping RNA reads and running BRAKER and processing output</b><br>
 
 ```shell
-hisat2-build -p 12 PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta
+hisat2-build -p 12 scaffolded_assembly.renamed.fasta.masked.fasta scaffolded_assembly.renamed.fasta.masked.fasta
 
-hisat2 -p 12 -x PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta -1 RNA_R1.fq.gz -2 RNA_R2.fq.gz 2> hisat-align.out | samtools sort -o PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.RNAmapped.bam
+hisat2 -p 12 -x scaffolded_assembly.renamed.fasta.masked.fasta -1 RNA_R1.fq.gz -2 RNA_R2.fq.gz 2> hisat-align.out | samtools sort -o scaffolded_assembly.renamed.fasta.masked.RNAmapped.bam
 
 braker.pl \
---genome PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.fasta \
---bam PGA_assembly.gapcloser.scaff_seqs.renamed.masked_assembly.RNAmapped.bam \
---prot_seq Hornwort_orthogroups.faa \
+--genome scaffolded_assembly.renamed.fasta.masked.fasta \
+--bam scaffolded_assembly.renamed.fasta.masked.RNAmapped.bam \
+--prot_seq Hornwort_orthogroups.faa \ # Protein sequences from shared orthogroups from previously published hornwort genomes 
 --prg=gth \
 --gth2traingenes \
 --verbosity 3 \
