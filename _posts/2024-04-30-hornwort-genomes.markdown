@@ -26,6 +26,7 @@ categories: jekyll update
 		<li>Synteny</li>
 		<li>Gene Expression</li>
 		<li>GO Term Enrichment</li>
+		<li>Whole Genome Duplication</li>
 	</ol>
 <li><a href = "#results-and-discussion">Results and Discussion</a></li>
 </ol>
@@ -53,6 +54,9 @@ categories: jekyll update
 
 <h2>Methods</h2>
 
+<section id="sequencing">
+<p>High molecular weight DNA was sequenced on Oxford Nanopore R9 MinION flowcells and basecalled with Guppy using the SUP basecalling model. </p>
+</section>
 
 <section id="assembly">
 <h3>2b. Assembly</h3>
@@ -220,7 +224,7 @@ gff2bed < trf_out_min50.gff > trf_out_min50.bed
 
 <section id="gene-prediction">
 <h3>2f. Gene Prediction</h3>
-<p>Gene models were predicted using BRAKER (), with input consisting of Illumina RNA reads mapped to the softmasked genome using HISAT2 () and predicted hornwort proteins from published <i>Anthoceros</i> genomes (Li et al 2020, Zhang et al. 2020). BRAKER output files were screened for genes with in-frame stop codons, which were marked as pseudogenes in the corresponding GTF file. Genes were renamed to contain their respective scaffold/contig name plus a number incremented by 100, restarting at the beginning of each scaffold/contig. Subsets of primary transcripts were created by selecting the longest transcript associated with each gene.
+<p>Gene models were predicted using a developement version of BRAKER3 (), with input consisting of Illumina RNA reads mapped to the softmasked genome using HISAT2 () and predicted hornwort proteins from published <i>Anthoceros</i> genomes (Li et al 2020, Zhang et al. 2020). BRAKER output files were screened for genes with in-frame stop codons, which were marked as pseudogenes in the corresponding GTF file. Genes were renamed to contain their respective scaffold/contig name plus a number incremented by 100, restarting at the beginning of each scaffold/contig. Subsets of primary transcripts were created by selecting the longest transcript associated with each gene.
 </p><br>
 <b>Code for mapping RNA reads and running BRAKER and processing output</b><br>
 
@@ -289,6 +293,13 @@ renameGTF_Phytozome.py -i augustus.hints.gtf --contig-table genome.fa_sequence_l
 
 <b>Create pseudo-gene annotated GTF</b><br>
 <p>Run <code>renameGTF_Phytozome.py</code> with <code>--bad-genes bad_genes.lst</code>. It will add <code>pseudo=true</code> to the GTF file to mark broken genes in <a href ="https://www.ncbi.nlm.nih.gov/genbank/genomes_gff/">NCBI style</a>.</p>
+<br>
+<b>Create primary transcript file</b>
+
+```shell
+removeAlternativeTranscripts.py braker.faa
+```
+
 
 </section> <!--Gene prediction end-->
 
@@ -417,17 +428,19 @@ awk -F"\t" '{ if ($2 != "NAN") print $0}' combined.tsv > combined.rmNA.tsv
 
 ```R
 library(ggplot2)
-library(dplyr)
+speciesName <- "Species name"
 combined <- read.delim("combined.rmNA.tsv", header = F, sep = "\t")
-
-combinedPlot <- ggplot(data = combined, aes(x=combined$V1, y=combined$V2)) +
+combined$V1 <- as.numeric(combined$V1)
+ggplot(data = combined, aes(x=V1, y=V2)) +
   stat_summary(fun.min = function(z) { quantile(z,0.25) },
                fun.max = function(z) { quantile(z,0.75) },
                fun = median, geom = "line", color = "red") + 
   ylab("Median % CG modification") +
   xlab("") +
   ylim(0,100) +
-combinedPlot +theme_bw() + scale_x_continuous(breaks = c(1,11,30,40), labels=c("1" = "-1 Kbp", "11" = "Start", "30" = "Stop", "40" = "+1 Kbp"))
+  ggtitle(speciesName) +
+  theme_bw() + 
+  scale_x_continuous(breaks = c(1,11,30,40), labels=c("1" = "-1 Kbp", "11" = "Start", "30" = "Stop", "40" = "+1 Kbp"))
 ```
 
 
@@ -435,6 +448,56 @@ combinedPlot +theme_bw() + scale_x_continuous(breaks = c(1,11,30,40), labels=c("
 
 <section id="orthogroups">
 <h3>2i. Orthogroup Inference</h3>
+<p>Orthogroups were constructed with <a href="https://github.com/davidemms/OrthoFinder">Orthofinder 2.5.4</a> using protein sequence input from genomes selected to represent a broad sampling across Viridiplantae. Because each genome and its genes are annotated differently, custom filtering methods were needed for most genomes to create informative sequence IDs and remove alternative transcripts. A selection of methods follow:</p>
+
+
+<b><i>Isoetes taiwanensis</i></b>: restructure names to represent just the unique transcript ID and remove alternative transcripts.
+
+```shell
+grep ">" Isoetes_taiwanensis_61511-CDS-prot.fasta | awk -F"|" '{print $0"\t"$9}' > Isoetes_taiwanensis_61511-CDS-prot.fasta.rename-table.tsv
+
+sed -i "s/>//" Isoetes_taiwanensis_61511-CDS-prot.fasta.rename-table.tsv
+
+renameFasta.py Isoetes_taiwanensis_61511-CDS-prot.fasta Isoetes_taiwanensis_61511-CDS-prot.fasta.rename-table.tsv
+
+grep "\-RA" Isoetes_taiwanensis_61511-CDS-prot_renamed.fasta | getFromFasta.py Isoetes_taiwanensis_61511-CDS-prot_renamed.fasta - > 
+Isoetes_taiwanensis_61511-CDS-prot_renamed.primary_transcripts.fasta
+```
+
+<b><i>Chara braunii</i></b>: remove alternative (shortest) transcripts when sequences are named with the `.t<number>` suffix.
+
+```shell
+removeAlternativeTranscripts.py chbra_iso_noTE_23546_pep.fasta
+```
+
+<b><i>Alsophila spinulosa</i></b>: replace in-frame stop codons with unknown amino acids. In Python:
+
+```python
+import re
+with open("Alsophila_spinulosa_v3.1_protein.fa", "r") as infile, open("Alsophila_spinulosa_v3.1_protein.IFSconverted.fa", "w") as outfile:
+	for line in infile:
+		if line.startswith(">"):
+			outfile.write(line)
+		else:
+			outfile.write(re.sub("\.", "X", line))
+```
+
+<b><i>Spirogloea muscicola</i></b>: check for alternative transcripts when lacking any information in transcript id:
+
+```shell
+# Convert FASTA header information to BED format:
+grep ">" Spirogloea_muscicola_gene.pep.fasta | awk -F" |:|=" '{print $6"\t"$7"\t"$8"\t"$1"\t0\t"$9}' | sort -k 1,1 -k 2,2n > Spirogloea_muscicola_gene.pep.fasta.sorted.bed
+
+# Use bedtools to merge overlapping or touching regions:
+bedtools merge -i Spirogloea_muscicola_gene.pep.fasta.sorted.bed -d 0 -s -c 1,4 -o count,distinct | awk -F"\t" '{ if ( $4 > 1 ) print $0}'
+```
+
+<p>Once all genomes were checked and modified as needed, run Orthofinder:</p>
+
+```shell
+orthofinder -M msa -t 24 -S diamond -A mafft -T fasttree -X -f ./orthofinder_input/
+```
+
 </section>
 
 <section id="synteny">
@@ -467,16 +530,11 @@ For HornwortBase:
 grep -w "gene" Anthoceros_agrestis_Oxford_gene_annotations.gff | gff2bed | awk -F"\t|=|;" '{print $1"\t"$2"\t"$3"\t"$11}' > Anthoceros_agrestis_Oxford.bed
 ```
 
-<p><b>Run Genespace</b></p>
+<p><b>Run Genespace in R:</b></p>
 
-```shell
-conda activate orthofinder
-```
-
-In R:
 ```R
 library(GENESPACE)
-gpar <- init_genespace(wd = "/media/peter/WD14TB-2/projects/hornwort_genomes/analysis/synteny/genespace", path2mcscanx = "~/bin/MCScanX/"
+gpar <- init_genespace(wd = "~/genespace", path2mcscanx = "~/bin/MCScanX/"
 out <- run_genespace(gsParam = gpar)
 ```
 
@@ -489,21 +547,35 @@ out <- run_genespace(gsParam = gpar)
 <p>To get stats about block size between pairs of genomes:</p>
 
 ```shell
-grep "AnagrBONN" syntenicBlock_coordinates.csv | grep "AnagrOxford" | sed 's/,/\t/g' | cut -f 5,12 | sort | uniq | cut -f 2 | summaryStats.R
+grep "AnagrBONN" syntenicBlock_coordinates.csv | grep "AnagrOXF" | sed 's/,/\t/g' | cut -f 5,12 | sort | uniq | cut -f 2 | summaryStats.R
 ```
 
 <p>Note that the sort and uniq commands are used to avoid double-counting the same block in both orientations.</p>
 
 </section> <!--Synteny end-->
 
-<section id="orthogroups">
+<section id="gene-expression">
 <h3>2k. Gene Expression</h3>
+<p>Gene expression was calculated by mapping RNA reads to the respective genome with Hisat2 and analyzed with Stringtie. Hisat2 indexes were built with splice site and exon information generated from the genome's GTF annotation file. The hisat2 script `hisat2_extract_exons.py` was modified to work with GTF files produced by BRAKER. Differential expression in <i>Notothylas orbicularis</i> followed the HISAT2-Stringtie-Ballgown pipeline as described in the Stringtie documentation (). In brief, each replicate RNAseq dataset was mapped to the genome with HISAT2 and the alignment used to assemble transcripts with Stringtie. Assemblies were merged with Stringtie to create a non-redundant set of transcripts, and then transcript abundance was estimated for each individual replicate. Statistical analysis of the abundances was performed in Ballgown ().</p>
 </section>
 
-<section id="orthogroups">
+<section id="go-enrichment">
 <h3>2l. GO Term Enrichment</h3>
 </section>
 
+<section id="wgd">
+<h3>2m. Whole Genome Duplication</h3>
+<p> Whole genome duplication (WGD) was inferred from Ks (synonymous substitution) plots from <a href="https://github.com/arzwa/wgd">wgd</a> (). The input is the CDS sequence fasta containing only primary transcripts. Self-synteny plots were visually inspected for any indication of 2-to-1 syntenic block ratios typical of WGD.</p>
+
+```shell
+wgd dmd --nostrictcds --ignorestop Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta
+
+wgd ksd --n_threads 24 Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta.mcl Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta
+
+wgd syn -f gene -a ID -ks Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta.tsv Anthoceros_agrestis_Oxford_gene_annotations.gff Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta.mcl
+```
+ 
+</section>
 
 <section id="results-and-discussion">
 <h2>Results and Discussion</h2>
