@@ -35,26 +35,53 @@ categories: jekyll update
 <section id="dependencies">
 <h2>Dependencies and Scripts</h2>
 
-| Name | Link | Citation |
-|------|------|----------|
-|convertFastqToFasta.py|      | Custom |
-|extract_UnknownLTR.py|      | Custom |
-|trf2gff.py|      | Custom | 
-|getFastaSeqLengths.py|      | Custom |
-|renameFasta.py |     | Custom |
-|renameFastaAndReorder.py|      | Custom |
-|renameGTF_Phytozome.py|      | Custom |
-|summaryStats.R|      | Custom |
-|      |      |          |
-|      |      |          |
-|      |      |          |
-|      |      |          |
+| Name | Purpose | Citation |
+|------|---------|----------|
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/addFastaMetadata.py">addFastaMetadata.py</a>| Add metadata fields to fasta sequence ids | Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/auN.py">auN.py</a> | Calculate and graph "area under" curves for assessing genome contiguiuty | Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/convertFastqToFasta.py">convertFastqToFasta.py</a>| SeqIO wrapper to convert files| Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/extract_unknownLTR.py">extract_UnknownLTR.py</a>| Get LTR sequences classified as unknown type from EDTA TE library | Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/getFastaSeqLengths.py">getFastaSeqLengths.py</a>| | Custom |
+|<a href ="https://github.com/pschafran/hornwort-genomes-paper/blob/main/getFromFasta.py">getFromFasta.py</a> | Extract specific sequence(s) from a fasta file| Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/pilon_iterative.sh">pilonIterative.sh</a> | Iteratively run pilon to polish genome a given number of times | Custom | 
+|<a href="">pyTable.py</a>| Count number of unique items in a single-column file | Custom | 
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/removeAlternativeTranscripts.py">removeAlternativeTranscripts.py</a> | Produce primary transcript file containing only the longest transcript for each gene | Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameFasta.py">renameFasta.py</a> | Convert sequence ids in a fasta file using a conversion table | Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameFastaAndReorder.py">renameFastaAndReorder.py</a>| Convert sequence ids in a fasta file and reorder them using a conversion table| Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameGTF_Phytozome.py">renameGTF_Phytozome.py</a>| Convert gene and transcript ids in a GTF file using a conversion table | Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/summaryStats.R">summaryStats.R</a>| Generate summary stats for a list of numbers piped to script through STDIN | Custom |
+|<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/trf2gff.py">trf2gff.py</a>| Convert tandemrepeatsfinder output to GFF format| Custom | 
+| flye | Long-read assembly |   |
+| TGS-Gapcloser | Filling gaps in scaffolded assembly |  |
+| juicer | Hi-C analysis  |   |
+| Juicebox Assembly Tools | Hi-C visualization |  |
+| pyGenomeTracks | Genome visualization |  |
+| bwa | Short-read mapping |          |
+| minimap2 | Long-read mapping |          |
+| hisat2 | RNA read mapping |          |
+| fastp | Short-read adapter/low quality base trimming |      |
+| porechop | ONT read adapter trimming |  |
+| EDTA | Repeat annotation and analysis |  |
+| BRAKER | Gene prediction |   |
+| EggNOG mapper | Gene function annotation |   |
+| OrthoFinder | Gene orthogroup inference   |   |
+| GENESPACE | Synteny analysis |   |
+| wgd | Whole genome duplication analysis |  |
+| CAFE | Orthogroup expansion/contraction |  |
+| r8s | Divergence time estimation |  |
+| gffread | GFF file manipulation | |
+| AGAT | GTF/GFF file conversion | |
+| IQ-Tree | Phylogenetic inference | |
+| BUSCO | Assembly completeness test | |
+| Blobtools2 | Assembly contamination identification | | 
+
 
 </section>
 
 <h2>Methods</h2>
 
 <section id="sequencing">
+<h3>2a. Sequencing</h3>
 <p>High molecular weight DNA was sequenced on Oxford Nanopore R9 MinION flowcells and basecalled with Guppy using the SUP basecalling model. </p>
 </section>
 
@@ -80,7 +107,7 @@ minimap2 -t 24 assembly.fasta ONT_reads.fq | samtools sort -o ont.bam
 java -Xmx50G -jar pilon-1.24.jar --genome assembly.fasta --frags illumina.bam --nanopore ont.bam --output pilon
 ```
 
-<p>Three rounds of Pilon generally corrected >90% of all changes with diminishing returns (and possible over-polishing errors) with further rounds.</p>
+<p>Three rounds of Pilon generally made >95% of all potential changes with diminishing returns (and possible over-polishing errors) with further rounds.</p>
 </section> <!--Assembly end-->
 
 <section id="scaffolding">
