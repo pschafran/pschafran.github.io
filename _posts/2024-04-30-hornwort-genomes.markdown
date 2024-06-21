@@ -32,6 +32,12 @@ categories: jekyll update
 </ol>
 </section> <!-- TOC end -->
 
+<section id="abstract">
+<h2>Abstract</h2><p>Hornworts, one of the three bryophyte phyla, represent some of the deepest divergences in extant land plants, with some families separated by more than 300 million years. Previous hornwort genomes represented only one genus, limiting the ability to infer evolution within hornworts and their early land plant ancestors. Here we report ten new chromosome-scale genomes representing all hornwort families and most of the genera. We found that despite the deep divergence, synteny was surprisingly conserved across all hornwort genomes, a pattern that might be related to the absence of whole genome duplication. We further uncovered multiple accessory and putative sex chromosomes that are highly repetitive and CpG methylated. In contrast to autosomes, these chromosomes mostly lack syntenic relationship with one another and are evolutionarily labile. Notable gene retention and losses were identified, including those responsible for flavonoid biosynthesis, stomata patterning, and phytohormone reception, which have implications in reconstructing the evolution of early land plants. Together, our pan-phylum genomes revealed an array of conserved and divergent genomic features in hornworts, highlighting the uniqueness of this deeply diverged lineage.</p>
+<p>The following are detailed methods used in analysis of hornwort genomes.</p>
+
+</section> <!-- Abstract end -->
+
 <section id="dependencies">
 <h2>Dependencies and Scripts</h2>
 
@@ -51,30 +57,42 @@ categories: jekyll update
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameGTF_Phytozome.py">renameGTF_Phytozome.py</a>| Convert gene and transcript ids in a GTF file using a conversion table | Custom |
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/summaryStats.R">summaryStats.R</a>| Generate summary stats for a list of numbers piped to script through STDIN | Custom |
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/trf2gff.py">trf2gff.py</a>| Convert tandemrepeatsfinder output to GFF format| Custom | 
-| flye | Long-read assembly |   |
-| TGS-Gapcloser | Filling gaps in scaffolded assembly |  |
+| flye 2.8 | Long-read assembly |   |
+| Pilon 1.24 | Draft assembly polishing | |
+| TGS-Gapcloser 1.1.1 | Filling gaps in scaffolded assembly |  |
 | juicer | Hi-C analysis  |   |
 | Juicebox Assembly Tools | Hi-C visualization |  |
-| pyGenomeTracks | Genome visualization |  |
-| bwa | Short-read mapping |          |
-| minimap2 | Long-read mapping |          |
-| hisat2 | RNA read mapping |          |
-| fastp | Short-read adapter/low quality base trimming |      |
-| porechop | ONT read adapter trimming |  |
-| EDTA | Repeat annotation and analysis |  |
-| BRAKER | Gene prediction |   |
-| EggNOG mapper | Gene function annotation |   |
-| OrthoFinder | Gene orthogroup inference   |   |
-| GENESPACE | Synteny analysis |   |
-| wgd | Whole genome duplication analysis |  |
-| CAFE | Orthogroup expansion/contraction |  |
+| hicexplorer 3.7.2 | |
+| pyGenomeTracks 3.8 | Genome visualization |  |
+| bwa 0.7.17-r1188 | Short-read mapping |          |
+| minimap2 2.17-r941 | Long-read mapping |          |
+| hisat2 2.2.1 f| RNA read mapping |          |
+| fastp 0.20.0 | Short-read adapter/low quality base trimming |      |
+| porechop 0.2.4 | ONT read adapter trimming |  |
+| EDTA 2.0.1 | Repeat annotation and analysis |  |
+| Tandem Repeats Finder 4.09.1
+| BRAKER 2.1.5 | Gene prediction |   |
+| EggNOG mapper 2.1.9 | Gene function annotation |   |
+| OrthoFinder 2.5.4 | Gene orthogroup inference   |   |
+| GENESPACE 1.3| Synteny analysis |   |
+| wgd 1.0 | Whole genome duplication analysis |  |
+| CAFE 5| Orthogroup expansion/contraction |  |
 | r8s | Divergence time estimation |  |
-| gffread | GFF file manipulation | |
+| gffread 0.11.7 | GFF file manipulation | |
 | AGAT | GTF/GFF file conversion | |
-| IQ-Tree | Phylogenetic inference | |
-| BUSCO | Assembly completeness test | |
+| IQ-TREE 2.0.3 | Phylogenetic inference | |
+| BUSCO 5.2.1 | Assembly completeness test | |
 | Blobtools2 | Assembly contamination identification | | 
-
+| BlobToolKit 4.1.2 | |
+| BLAST+ toolkit 2.10.0 | Sequence similarity search | |
+| DIAMOND 2.0.15 | Sequence similarity search | |
+| Megalodon 2.5.0 | |
+| bismark 0.24.1 | |
+| RepeatMasker 4.1.0 | |
+| Stringtie 2.1.1 | |
+| Ballgown | |
+| goatools | GO Term enrichment |
+| <a href="https://bioconda.github.io/recipes/pfam_scan/README.html">pfam_scan.pl</a> ||
 
 </section>
 
@@ -245,6 +263,7 @@ gff2bed < trf_out_min50.gff > trf_out_min50.bed
 <p>TRF will find elements already identified by EDTA. To filter those out, we can remove the overlapping items:</p>
 
 ```shell
+//TODO
 ```
 
 </section> <!--Repeat annotation end-->
@@ -332,7 +351,23 @@ removeAlternativeTranscripts.py braker.faa
 
 <section id="functional">
 <h3>2g. Functional Annotation</h3>
-</section>
+<p>Gene functions were predicted using the eggNOG mapper tool by comparison to the eggNOG 5.0 database using default search settings.</p>
+
+```shell
+emapper.py -i braker.faa -o species_name
+``` 
+
+<p>Domains within proteins were also annotated by pfam_scan, using the amino acid sequences as input.</p>
+
+```shell
+pfam_scan.pl -fasta braker.faa \
+-dir ~/pfamDB/ \ # Change to wherever you downloaded your PFAM databse
+-cpu 24 \
+> braker.faa.pfams
+
+```
+
+</section> <!--Functional annotation end-->
 
 <section id="methylation">
 <h3>2h. Methylation</h3>
