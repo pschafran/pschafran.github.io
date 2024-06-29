@@ -6,6 +6,7 @@ categories: jekyll update
 ---
 <section>
 <p>Intial Post Date: 2024-04-30</p>
+<p>qLast Updated: 2024-06-27</p>
 </section>
 
 <section id="toc">
@@ -50,7 +51,7 @@ categories: jekyll update
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/getFastaSeqLengths.py">getFastaSeqLengths.py</a>| | Custom |
 |<a href ="https://github.com/pschafran/hornwort-genomes-paper/blob/main/getFromFasta.py">getFromFasta.py</a> | Extract specific sequence(s) from a fasta file| Custom |
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/pilon_iterative.sh">pilonIterative.sh</a> | Iteratively run pilon to polish genome a given number of times | Custom | 
-|<a href="">pyTable.py</a>| Count number of unique items in a single-column file | Custom | 
+|<a href="">pyTable.py</a>| Count amounts of each unique item in a single-column file | Custom | 
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/removeAlternativeTranscripts.py">removeAlternativeTranscripts.py</a> | Produce primary transcript file containing only the longest transcript for each gene | Custom |
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameFasta.py">renameFasta.py</a> | Convert sequence ids in a fasta file using a conversion table | Custom |
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameFastaAndReorder.py">renameFastaAndReorder.py</a>| Convert sequence ids in a fasta file and reorder them using a conversion table| Custom |
@@ -100,7 +101,7 @@ categories: jekyll update
 
 <section id="sequencing">
 <h3>2a. Sequencing</h3>
-<p>High molecular weight DNA was sequenced on Oxford Nanopore R9 MinION flowcells and basecalled with Guppy using the SUP basecalling model. </p>
+<p>High molecular weight DNA was sequenced on Oxford Nanopore R9 MinION flowcells and basecalled with Guppy v5 using the dna_r9.4.1_450bps_sup model. </p>
 </section>
 
 <section id="assembly">
@@ -242,28 +243,22 @@ RepeatMasker/util/buildSummary.pl -useAbsoluteGenomeSize scaffolded_assembly.ren
 ```
 
 <b>Tandem Repeats Finder</b>
-<p>The software `tandem repeats finder` (TRF) can find additional tandem repeats that are associated with centromeres and telomeres.</p>
+<p>The software `tandem repeats finder` (TRF) can find additional tandem repeats that are associated with centromeres and telomeres. To avoid double-counting repeats already identified by EDTA/RepeatMasker, we use a hard-masked version of the genome output by RepeatMasker. </p>
 
 <p>Run TRF:</p>
 
 ```shell
-trf scaffolded_assembly.renamed.fasta 2 7 7 80 10 50 2000 -h -d -m -ngs > trf_out.txt
+trf scaffolded_assembly.renamed.fasta.masked 2 7 7 80 10 50 2000 -h -d -m -ngs > trf_out.txt
 ```
 
-<p>Convert TRF output to GFF and BED formats:</p>
+<p>Convert TRF output to GFF, then combine with the repeats GFF file produced by EDTA/RepeatMasker and sort so they are in genomic order.</p>
 
 ```shell
 trf2gff.py trf_out.txt 50 > trf_out_min50.gff
 
 awk -F"\t" '{print $1"\t"$2"\ttandem_repeat\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9}' trf_out_min50.gff > trf_out_min50.renamed.gff
 
-gff2bed < trf_out_min50.gff > trf_out_min50.bed
-```
-
-<p>TRF will find elements already identified by EDTA. To filter those out, we can remove the overlapping items:</p>
-
-```shell
-//TODO
+cat other_repeats.gff trf_out_min50.renamed.gff | sort -k1,1 -k 4,4n > all_repeats.gff
 ```
 
 </section> <!--Repeat annotation end-->
@@ -341,6 +336,7 @@ renameGTF_Phytozome.py -i augustus.hints.gtf --contig-table genome.fa_sequence_l
 <p>Run <code>renameGTF_Phytozome.py</code> with <code>--bad-genes bad_genes.lst</code>. It will add <code>pseudo=true</code> to the GTF file to mark broken genes in <a href ="https://www.ncbi.nlm.nih.gov/genbank/genomes_gff/">NCBI style</a>.</p>
 <br>
 <b>Create primary transcript file</b>
+<p>This creates a new file with the longest transcript for each gene. Only works assuming sequence IDs end in ".t<i>n</i>" and everything preceeding is a unique gene ID. Depending on the gene prediction software, ".t1" transcripts may be decided as the transcript with the highest support. However, we found that using only ".t1" transcripts as the primary transcripts created a decrease in complete BUSCOs of several percentage points, whereas using the longest transcripts did not have this effect.</p>
 
 ```shell
 removeAlternativeTranscripts.py braker.faa
@@ -560,6 +556,16 @@ bedtools merge -i Spirogloea_muscicola_gene.pep.fasta.sorted.bed -d 0 -s -c 1,4 
 orthofinder -M msa -t 24 -S diamond -A mafft -T fasttree -X -f ./orthofinder_input/
 ```
 
+<p>With the sequence files for each orthogroup, I generated more accurate phylogenies by aligning each orthogroup with Clustal Omega, trimming sites with >90% gaps to remove spurious alignments, and inferred phylognies with IQ-TREE with standard model selection and 5000 ultrafast bootstrap replicates. Note use of `find` because the file list is usually too long for using wildcards. </p>
+
+```
+find . -name "OG*fa" | while read i ; do clustalo --auto -i "$i" -o "$i".CLUSTAL.fa ; done
+
+find . -name "OG*CLUSTAL.fa" | while read i ; do trimal -in "$i" -out "$i".TRIM.fa -gt 0.1
+
+find . -name "OG*TRIM.fa" | while read i ; do iqtree -s "$i" -T 4 -B 5000 -m TEST ; done
+```
+
 </section>
 
 <section id="synteny">
@@ -618,7 +624,38 @@ grep "AnagrBONN" syntenicBlock_coordinates.csv | grep "AnagrOXF" | sed 's/,/\t/g
 
 <section id="gene-expression">
 <h3>2k. Gene Expression</h3>
-<p>Gene expression was calculated by mapping RNA reads to the respective genome with Hisat2 and analyzed with Stringtie. Hisat2 indexes were built with splice site and exon information generated from the genome's GTF annotation file. The hisat2 script `hisat2_extract_exons.py` was modified to work with GTF files produced by BRAKER. Differential expression in <i>Notothylas orbicularis</i> followed the HISAT2-Stringtie-Ballgown pipeline as described in the Stringtie documentation (). In brief, each replicate RNAseq dataset was mapped to the genome with HISAT2 and the alignment used to assemble transcripts with Stringtie. Assemblies were merged with Stringtie to create a non-redundant set of transcripts, and then transcript abundance was estimated for each individual replicate. Statistical analysis of the abundances was performed in Ballgown ().</p>
+<p>Gene expression was calculated by mapping RNA reads to the respective genome with Hisat2 and analyzed with Stringtie. Hisat2 indexes were built with splice site and exon information generated from the genome's GTF annotation file. The hisat2 script `hisat2_extract_exons.py` was modified to work with GTF files produced by BRAKER.</p>
+
+```shell
+hisat2_extract_splice_sites.py braker.gtf > ss.txt
+hisat2_extract_exons_BRAKER.py > exon.txt
+hisat2-build --ss ss.txt --exon exon.txt genome.fasta genome.fasta
+```
+
+<p>Differential expression in <i>Notothylas orbicularis</i> followed the HISAT2-Stringtie-Ballgown pipeline as described in the Stringtie documentation (). In brief, each replicate RNAseq dataset was mapped to the genome with HISAT2 and the alignment used to assemble transcripts with Stringtie.</p>
+
+```shell
+hisat2 -p 24 --dta -x genome.fasta -1 sample1_RNA_reads_R1.fq.gz -2 sample1_RNA_reads_R2.fq.gz | samtools sort -o genome.sample1_RNA.bam
+
+for i in genome.sample*RNA.bam ; do stringtie -o "$i".stringtie.gtf -G braker.gtf "$i" ; done
+```
+
+<p>Assemblies were merged with Stringtie to create a non-redundant set of transcripts, and then transcript abundance was estimated for each individual replicate.</p>
+
+```shell
+stringtie --merge -o stringtie.merged.gtf -G braker.gtf *stringtie.gtf
+
+for i in genome.sample*RNA.bam ; do stringtie -o "$i".stringtie.merged -G stringtie.merged.gtf
+```
+
+<p>Statistical analysis of the abundances was performed in Ballgown ().</p>
+
+```shell
+hisat2_extract_splice_sites.py braker.gtf > ss.txt
+hisat2_extract_exons_BRAKER.py > exon.txt
+```
+
+
 </section>
 
 <section id="go-enrichment">
