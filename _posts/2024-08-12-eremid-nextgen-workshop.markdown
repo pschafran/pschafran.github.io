@@ -29,64 +29,61 @@ conda install -c bioconda -c conda-forge fastp spades getorganelle novoplasty iq
 
 ### Inspect Data
 
-1. Trim adapters, discard low quality reads with fastp. 
+Trim adapters, discard low quality reads with fastp. 
 
 ```
 fastp -i R1.fastq.gz -I R2.fastq.gz -o R1.fastp.fastq.gz -O R2.fastp.fastq.gz -5 -3 --detect_adapter_for_pe -p --html SAMPLE.html --json SAMPLE.json
 ```
 
-2. Inspect fastp html file, check for any abnormalities. 
+Inspect fastp html file, check for any abnormalities. 
 
-3. (Optional) Taxonomic classification to check for bacterial contaminants. https://www.bv-brc.org/app/TaxonomicClassification
+(Optional) Taxonomic classification to check for bacterial contaminants. https://www.bv-brc.org/app/TaxonomicClassification
 
 ### Method 1: Reference-based filtering followed by de novo assembly
 
-1. Get a complete reference sequence (FASTA format) from NCBI GenBank or other source. 
+Get a complete reference sequence (FASTA format) from NCBI GenBank or other source. 
 
-2. Index reference sequence with Bowtie2.
+Index reference sequence with Bowtie2.
 
 ```
 bowtie2-build reference.fasta reference.fasta
 ``` 
 
-3. Map reads to reference, saving mapped reads to new files. Adjust `-p` to match your computer's # CPUs. Using `--very-sensitive-local` enhances short matches for more distantly related species.
+Map reads to reference, saving mapped reads to new files. Adjust `-p` to match your computer's # CPUs. Using `--very-sensitive-local` enhances short matches for more distantly related species.
 
 ```
 bowtie2 -p 12 -x reference.fasta -1 R1.fastp.fastq.gz -2 R2.fastp.fastq.gz --al-conc-gz R%.aln.fastq.gz --very-sensitive-local &> /dev/null
 ```
 
-4. Assemble mapped reads with SPAdes. Change `-t` to match your computers # of CPUs. Change `-o` to whatever the sample name is. 
+Assemble mapped reads with SPAdes. Change `-t` to match your computers # of CPUs. Change `-o` to whatever the sample name is. 
 
 ```
 spades.py -1 R1.aln.fastq.gz -2 R2.aln.fastq.gz -t 12 -o SAMPLE_NAME --careful
 ```
 
-5. Check the `scaffolds.fasta` file in the output folder. If successful, there should be three large scaffolds, approx. 100k, 25k, and 15k in length, representing the LSC, SSC, and IR regions. Manually stitch them together in Geneious based on the reference. 
-6. If more and/or smaller scaffolds are produced, try mapping them to the reference in Geneious to see what's missing. 
+Check the `scaffolds.fasta` file in the output folder. If successful, there should be three large scaffolds, approx. 100k, 25k, and 15k in length, representing the LSC, SSC, and IR regions. Manually stitch them together in Geneious based on the reference. 
+If more and/or smaller scaffolds are produced, try mapping them to the reference in Geneious to see what's missing. 
 
 ### Method 2: Completely de novo
 
-1. Input all adapter-trimmed reads into getOrganelle or NOVOPlasty.
-
-1a. To set up getOrganelle for the first time:
+Input all adapter-trimmed reads into getOrganelle or NOVOPlasty. To set up getOrganelle for the first time:
 
 ```
 # This downloads all databases for different organisms and organelles. See help menu/documentation to download certain ones.
 get_organelle_config.py -a all
 ```
-
-1b. Run getOrganelle for an embryophyte plant plastid. See documention for other organism and organelle options.
+Run getOrganelle for an embryophyte plant plastid. See documention for other organism and organelle options.
 
 ```
 get_organelle_from_reads.py -1 R1.fastp.fastq.gz -2 R2.fastp.fastq.gz -F embplant_pt -t 12
 ```
 
-2. Inspect output files. Hopefully you'll get a complete circular sequence with filename like: `embplant_pt.K115.complete.graph1.1.path_sequence.fasta`. 
+Inspect output files. Hopefully you'll get a complete circular sequence with filename like: `embplant_pt.K115.complete.graph1.1.path_sequence.fasta`. 
 
-3. Remap reads to assembled plastome to evaluate. 
+Remap reads to assembled plastome to evaluate. 
 
 ```
 evaluate_assembly_using_mapping.py -f embplant_pt.K115.complete.graph1.1.path_sequence.fasta -1 R1.fastp.fastq.gz -2 R2.fastp.fastq.gz -t 12 -o evaluate_output --draw
 ```
 
-4. Check coverage levels plotted in `mapping.pdf`. "Matched"  level should be pretty even (though noisy) across LSC/SSC, maybe be different in IRs.
+Check coverage levels plotted in `mapping.pdf`. "Matched"  level should be pretty even (though noisy) across LSC/SSC, maybe be different in IRs.
