@@ -7,10 +7,12 @@ title:  "Eremid Genomics and Catawba College -- Illumina Next Generation Sequenc
 
 1. [Geneious Prime Free Trial](https://www.geneious.com/free-trial)
 2. [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
-3. [Sequence Data Files](https://cornell.box.com/s/o5y164l09syhttirifhv3ow1qhsht1en)
+3. [Sequence Data Files (Box Drive)](https://cornell.box.com/s/o5y164l09syhttirifhv3ow1qhsht1en)
 4. [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/)
 5. [GeSeq](https://chlorobox.mpimp-golm.mpg.de/geseq.html)
 6. [BV-BRC Taxonomic Classification Service](https://www.bv-brc.org/app/TaxonomicClassification)
+7. [CIPRES Science Gateway](https://www.phylo.org)
+8. [Galaxy Webserver](https://usegalaxy.org/)
 
 ## Unix/Linux Command Line Plastome Assembly
 
