@@ -3,7 +3,8 @@ layout: post
 title:  "Eremid Genomics and Catawba College -- Illumina Next Generation Sequencing Workshop"
 ---
 
-# Useful Links
+## Useful Links
+
 1. [Geneious Prime Free Trial](https://www.geneious.com/free-trial)
 2. [FastQC](https://www.bioinformatics.babraham.ac.uk/projects/fastqc/)
 3. [Sequence Data Files](https://cornell.box.com/s/o5y164l09syhttirifhv3ow1qhsht1en)
@@ -11,9 +12,9 @@ title:  "Eremid Genomics and Catawba College -- Illumina Next Generation Sequenc
 5. [GeSeq](https://chlorobox.mpimp-golm.mpg.de/geseq.html)
 6. [BV-BRC Taxonomic Classification Service](https://www.bv-brc.org/app/TaxonomicClassification)
 
-# Unix/Linux Command Line Plastome Assembly
+## Unix/Linux Command Line Plastome Assembly
 
-## Software
+### Software
 
 * [fastp](https://github.com/OpenGene/fastp)
 * [SPAdes](https://github.com/ablab/spades)
@@ -21,7 +22,7 @@ title:  "Eremid Genomics and Catawba College -- Illumina Next Generation Sequenc
 * [NOVOPlasty](https://github.com/ndierckx/NOVOPlasty)
 * [iqtree](https://github.com/iqtree/iqtree2)
 
-## Install
+### Install
 
 ```
 conda install -c bioconda -c conda-forge fastp spades getorganelle novoplasty iqtree matplotlib
