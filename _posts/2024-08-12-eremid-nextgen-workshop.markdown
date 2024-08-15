@@ -108,7 +108,7 @@ get_organelle_config.py -a all
 Run getOrganelle for an embryophyte plant plastid. See documention for other organism and organelle options.
 
 ```
-get_organelle_from_reads.py -1 R1.fastp.fastq.gz -2 R2.fastp.fastq.gz -F embplant_pt -t 12
+get_organelle_from_reads.py -1 R1.fastp.fastq.gz -2 R2.fastp.fastq.gz -F embplant_pt -t 12 -o output_dir
 ```
 
 Inspect output files. Hopefully you'll get a complete circular sequence with filename like: `embplant_pt.K115.complete.graph1.1.path_sequence.fasta`. 
