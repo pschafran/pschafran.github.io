@@ -31,11 +31,14 @@ title:  "Eremid Genomics and Catawba College -- Illumina Next Generation Sequenc
 Install conda if you haven't already. Following are instructions for Linux and Mac -- pick correct one for your computer. Follow the on-screen prompts using default settings.
 
 ```
-# MacOS
+# MacOS ARM CPU
 mkdir -p ~/miniconda3
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/miniconda3/miniconda.sh
 bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
 rm -rf ~/miniconda3/miniconda.sh
+
+# MacOS Intel CPU
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-x86_64.sh -o ~/miniconda3/miniconda.sh
 
 # Linux
 mkdir -p ~/miniconda3
