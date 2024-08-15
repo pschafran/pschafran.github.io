@@ -13,6 +13,8 @@ title:  "Eremid Genomics and Catawba College -- Illumina Next Generation Sequenc
 6. [BV-BRC Taxonomic Classification Service](https://www.bv-brc.org/app/TaxonomicClassification)
 7. [CIPRES Science Gateway](https://www.phylo.org)
 8. [Galaxy Webserver](https://usegalaxy.org/)
+9. [Miniconda Install](https://docs.anaconda.com/miniconda/#quick-command-line-install)
+
 
 ## Unix/Linux Command Line Plastome Assembly
 
@@ -25,6 +27,24 @@ title:  "Eremid Genomics and Catawba College -- Illumina Next Generation Sequenc
 * [iqtree](https://github.com/iqtree/iqtree2)
 
 ### Install
+
+Install conda if you haven't already. Following are instructions for Linux and Mac -- pick correct one for your computer. Follow the on-screen prompts using default settings.
+
+```
+# MacOS
+mkdir -p ~/miniconda3
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-MacOSX-arm64.sh -o ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+
+# Linux
+mkdir -p ~/miniconda3
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O ~/miniconda3/miniconda.sh
+bash ~/miniconda3/miniconda.sh -b -u -p ~/miniconda3
+rm -rf ~/miniconda3/miniconda.sh
+```
+
+Restart your terminal session for it to take effect.
 
 ```
 conda install -c bioconda -c conda-forge fastp spades getorganelle novoplasty iqtree matplotlib
@@ -67,9 +87,9 @@ spades.py -1 R1.aln.fastq.gz -2 R2.aln.fastq.gz -t 12 -o SAMPLE_NAME --careful
 Check the `scaffolds.fasta` file in the output folder. If successful, there should be three large scaffolds, approx. 100k, 25k, and 15k in length, representing the LSC, SSC, and IR regions. Manually stitch them together in Geneious based on the reference. 
 If more and/or smaller scaffolds are produced, try mapping them to the reference in Geneious to see what's missing. 
 
-### Method 2: Completely de novo
+### Method 2: Completely de novo with getOrganelle
 
-Input all adapter-trimmed reads into getOrganelle or NOVOPlasty. To set up getOrganelle for the first time:
+Input all adapter-trimmed reads into getOrganelle. To set up getOrganelle for the first time:
 
 ```
 # This downloads all databases for different organisms and organelles. See help menu/documentation to download certain ones.
@@ -90,3 +110,9 @@ evaluate_assembly_using_mapping.py -f embplant_pt.K115.complete.graph1.1.path_se
 ```
 
 Check coverage levels plotted in `mapping.pdf`. "Matched"  level should be pretty even (though noisy) across LSC/SSC, maybe be different in IRs.
+
+### Method 3: Completely de novo with NOVOPlasty.
+
+NOVOPlasty requires a starting sequence (FASTA format) that closely matches your organism. Find a sequence for a conserved gene (e.g. rbcL) from GenBank or another source. Copy the file into your working directory. 
+
+//TODO
