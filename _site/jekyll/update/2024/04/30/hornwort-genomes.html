@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Pan-phylum genomes of hornworts revealed conserved autosomes but dynamic accessory and sex chromosomes | PWS Notes</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Pan-phylum genomes of hornworts revealed conserved autosomes but dynamic accessory and sex chromosomes" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Intial Post Date: 2024-04-30 Last Updated: 2024-06-27" />
+<meta property="og:description" content="Intial Post Date: 2024-04-30 Last Updated: 2024-06-27" />
+<link rel="canonical" href="http://localhost:4000/jekyll/update/2024/04/30/hornwort-genomes.html" />
+<meta property="og:url" content="http://localhost:4000/jekyll/update/2024/04/30/hornwort-genomes.html" />
+<meta property="og:site_name" content="PWS Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-04-30T15:37:17-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Pan-phylum genomes of hornworts revealed conserved autosomes but dynamic accessory and sex chromosomes" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-04-30T15:37:17-04:00","datePublished":"2024-04-30T15:37:17-04:00","description":"Intial Post Date: 2024-04-30 Last Updated: 2024-06-27","headline":"Pan-phylum genomes of hornworts revealed conserved autosomes but dynamic accessory and sex chromosomes","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/jekyll/update/2024/04/30/hornwort-genomes.html"},"url":"http://localhost:4000/jekyll/update/2024/04/30/hornwort-genomes.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="PWS Notes" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">PWS Notes</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/blog.html">Blog</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Pan-phylum genomes of hornworts revealed conserved autosomes but dynamic accessory and sex chromosomes</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-04-30T15:37:17-04:00" itemprop="datePublished">Apr 30, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <section>
+  <p>Intial Post Date: 2024-04-30</p>
+  <p>Last Updated: 2024-06-27</p>
+</section>
+
+<section id="toc">
+  <h2>Table of Contents</h2>
+  <ol>
+<li><a href="#abstract">Abstract</a></li>
+<li><a href="#methods">Methods</a></li>
+	<ol type="a">
+		<li>Sequencing</li>
+		<li>Assembly</li>
+		<li>Scaffolding</li>
+		<li>Decontamination</li>
+		<li>Repeat Annotation</li>
+		<li>Gene Prediction</li>
+		<li>Functional Annotation</li>
+		<li>Methylation</li>
+		<li>Orthogroup Inference</li>
+		<li>Synteny</li>
+		<li>Gene Expression</li>
+		<li>GO Term Enrichment</li>
+		<li>Whole Genome Duplication</li>
+	</ol>
+<li><a href="#results-and-discussion">Results and Discussion</a></li>
+</ol>
+</section>
+<p><!-- TOC end --></p>
+
+<section id="abstract">
+  <h2>Abstract</h2>
+  <p>Hornworts, one of the three bryophyte phyla, represent some of the deepest divergences in extant land plants, with some families separated by more than 300 million years. Previous hornwort genomes represented only one genus, limiting the ability to infer evolution within hornworts and their early land plant ancestors. Here we report ten new chromosome-scale genomes representing all hornwort families and most of the genera. We found that despite the deep divergence, synteny was surprisingly conserved across all hornwort genomes, a pattern that might be related to the absence of whole genome duplication. We further uncovered multiple accessory and putative sex chromosomes that are highly repetitive and CpG methylated. In contrast to autosomes, these chromosomes mostly lack syntenic relationship with one another and are evolutionarily labile. Notable gene retention and losses were identified, including those responsible for flavonoid biosynthesis, stomata patterning, and phytohormone reception, which have implications in reconstructing the evolution of early land plants. Together, our pan-phylum genomes revealed an array of conserved and divergent genomic features in hornworts, highlighting the uniqueness of this deeply diverged lineage.</p>
+  <p>The following are detailed methods used in analysis of hornwort genomes.</p>
+
+</section>
+<p><!-- Abstract end --></p>
+
+<section id="dependencies">
+  <h2>Dependencies and Scripts</h2>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Purpose</th>
+        <th>Citation</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/addFastaMetadata.py">addFastaMetadata.py</a></td>
+        <td>Add metadata fields to fasta sequence ids</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/auN.py">auN.py</a></td>
+        <td>Calculate and graph “area under” curves for assessing genome contiguiuty</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/convertFastqToFasta.py">convertFastqToFasta.py</a></td>
+        <td>SeqIO wrapper to convert files</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/extract_unknownLTR.py">extract_UnknownLTR.py</a></td>
+        <td>Get LTR sequences classified as unknown type from EDTA TE library</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/getFastaSeqLengths.py">getFastaSeqLengths.py</a></td>
+        <td> </td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/getFromFasta.py">getFromFasta.py</a></td>
+        <td>Extract specific sequence(s) from a fasta file</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/pilon_iterative.sh">pilonIterative.sh</a></td>
+        <td>Iteratively run pilon to polish genome a given number of times</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="">pyTable.py</a></td>
+        <td>Count amounts of each unique item in a single-column file</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/removeAlternativeTranscripts.py">removeAlternativeTranscripts.py</a></td>
+        <td>Produce primary transcript file containing only the longest transcript for each gene</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameFasta.py">renameFasta.py</a></td>
+        <td>Convert sequence ids in a fasta file using a conversion table</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameFastaAndReorder.py">renameFastaAndReorder.py</a></td>
+        <td>Convert sequence ids in a fasta file and reorder them using a conversion table</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameGTF_Phytozome.py">renameGTF_Phytozome.py</a></td>
+        <td>Convert gene and transcript ids in a GTF file using a conversion table</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/summaryStats.R">summaryStats.R</a></td>
+        <td>Generate summary stats for a list of numbers piped to script through STDIN</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td><a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/trf2gff.py">trf2gff.py</a></td>
+        <td>Convert tandemrepeatsfinder output to GFF format</td>
+        <td>Custom</td>
+      </tr>
+      <tr>
+        <td>flye 2.8</td>
+        <td>Long-read assembly</td>
+        <td><a href="https://doi.org/10.1038/s41587-019-0072-8">Kolmogorov et al. 2019</a></td>
+      </tr>
+      <tr>
+        <td>Pilon 1.24</td>
+        <td>Draft assembly polishing</td>
+        <td><a href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0112963">Walker et al. 2014</a></td>
+      </tr>
+      <tr>
+        <td>TGS-Gapcloser 1.1.1</td>
+        <td>Filling gaps in scaffolded assembly</td>
+        <td><a href="https://doi.org/10.1093/gigascience/giaa094">Xu et al. 2020</a></td>
+      </tr>
+      <tr>
+        <td>juicer</td>
+        <td>Hi-C analysis</td>
+        <td><a href="https://www.cell.com/fulltext/S2405-4712(16)30219-8">Durand et al. 2016</a></td>
+      </tr>
+      <tr>
+        <td>Juicebox Assembly Tools</td>
+        <td>Hi-C visualization</td>
+        <td><a href="https://github.com/aidenlab/Juicebox">Aiden Lab</a></td>
+      </tr>
+      <tr>
+        <td>hicexplorer 3.7.2</td>
+        <td>Hi-C visualization and analysis</td>
+        <td><a href="https://doi.org/10.1038/s41467-017-02525-w">Ramirez et al. 2018</a></td>
+      </tr>
+      <tr>
+        <td>pyGenomeTracks 3.8</td>
+        <td>Genome visualization</td>
+        <td><a href="https://academic.oup.com/bioinformatics/article/37/3/422/5879987">Lopez-Delisle et al. 2021</a></td>
+      </tr>
+      <tr>
+        <td>bwa 0.7.17-r1188</td>
+        <td>Short-read mapping</td>
+        <td><a href="http://arxiv.org/abs/1303.3997">Li 2013</a></td>
+      </tr>
+      <tr>
+        <td>minimap2 2.17-r941</td>
+        <td>Long-read mapping</td>
+        <td><a href="https://academic.oup.com/bioinformatics/article/34/18/3094/4994778">Li 2018</a></td>
+      </tr>
+      <tr>
+        <td>hisat2 2.2.1</td>
+        <td>RNA read mapping</td>
+        <td><a href="https://www.nature.com/articles/s41587-019-0201-4">Kim et al. 2019</a></td>
+      </tr>
+      <tr>
+        <td>fastp 0.20.0</td>
+        <td>Short-read adapter/low quality base trimming</td>
+        <td><a href="https://academic.oup.com/bioinformatics/article/34/17/i884/5093234">Chen et al. 2018</a></td>
+      </tr>
+      <tr>
+        <td>porechop 0.2.4</td>
+        <td>ONT read adapter trimming</td>
+        <td><a href="https://github.com/rrwick/Porechop">Wick 2018</a></td>
+      </tr>
+      <tr>
+        <td>EDTA 2.0.1</td>
+        <td>Repeat annotation and analysis</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>Tandem Repeats Finder 4.09.1</td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>BRAKER 2.1.5</td>
+        <td>Gene prediction</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>EggNOG mapper 2.1.9</td>
+        <td>Gene function annotation</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>OrthoFinder 2.5.4</td>
+        <td>Gene orthogroup inference</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>GENESPACE 1.3</td>
+        <td>Synteny analysis</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>wgd 1.0</td>
+        <td>Whole genome duplication analysis</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>CAFE 5</td>
+        <td>Orthogroup expansion/contraction</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>r8s</td>
+        <td>Divergence time estimation</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>gffread 0.11.7</td>
+        <td>GFF file manipulation</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>AGAT</td>
+        <td>GTF/GFF file conversion</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>IQ-TREE 2.0.3</td>
+        <td>Phylogenetic inference</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>BUSCO 5.2.1</td>
+        <td>Assembly completeness test</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>Blobtools2</td>
+        <td>Assembly contamination identification</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>BlobToolKit 4.1.2</td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>BLAST+ toolkit 2.10.0</td>
+        <td>Sequence similarity search</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>DIAMOND 2.0.15</td>
+        <td>Sequence similarity search</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>Megalodon 2.5.0</td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>bismark 0.24.1</td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>RepeatMasker 4.1.0</td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>Stringtie 2.1.1</td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>Ballgown</td>
+        <td> </td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td>goatools</td>
+        <td>GO Term enrichment</td>
+        <td> </td>
+      </tr>
+      <tr>
+        <td><a href="https://bioconda.github.io/recipes/pfam_scan/README.html">pfam_scan.pl</a></td>
+        <td> </td>
+        <td> </td>
+      </tr>
+    </tbody>
+  </table>
+
+</section>
+
+<h2>Methods</h2>
+
+<section id="sequencing">
+  <h3>2a. Sequencing</h3>
+  <p>High molecular weight DNA was sequenced on Oxford Nanopore R9 MinION flowcells and basecalled with Guppy v5 using the dna_r9.4.1_450bps_sup model. </p>
+</section>
+
+<section id="assembly">
+  <h3>2b. Assembly</h3>
+  <p>ONT reads less than 5 kbp were removed and the remainder were assembled with Flye v2.9:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="s1">'BEGIN {FS = "\t" ; OFS = "\n"} {header = $0 ; getline seq ; getline qheader ; getline qseq ; if (length(seq) &gt;= 5000) {print header, seq, qheader, qseq}}'</span> &lt; your.fastq <span class="o">&gt;</span> filtered.fastq
+
+flye <span class="nt">--nano-hq</span> filtered.fastq <span class="nt">-t</span> 24 <span class="nt">-o</span> flye
+</code></pre></div>  </div>
+
+  <p>Contigs were corrected with Illumina DNA sequence data using Pilon v1.24 in three iterations, with the Pilon output as input each successive round:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bwa index assembly.fasta
+
+bwa mem <span class="nt">-t</span> 24 assembly.fasta Illumina_reads_R1.fq Illumina_reads_R2.fq | samtools <span class="nb">sort</span> <span class="nt">-o</span> illumina.bam
+
+minimap2 <span class="nt">-t</span> 24 assembly.fasta ONT_reads.fq | samtools <span class="nb">sort</span> <span class="nt">-o</span> ont.bam
+
+java <span class="nt">-Xmx50G</span> <span class="nt">-jar</span> pilon-1.24.jar <span class="nt">--genome</span> assembly.fasta <span class="nt">--frags</span> illumina.bam <span class="nt">--nanopore</span> ont.bam <span class="nt">--output</span> pilon
+</code></pre></div>  </div>
+
+  <p>Three rounds of Pilon generally made &gt;95% of all potential changes with diminishing returns (and possible over-polishing errors) with further rounds.</p>
+</section>
+<p><!--Assembly end--></p>
+
+<section id="scaffolding">
+  <h3>2c. Scaffolding</h3>
+  <p>HiC libraries were prepared, sequenced, and scaffolded by Phase Genomics (Seattle, WA). TGS-Gapcloser was used to fill gaps between scaffolds with ONT reads and polish filled gaps with Illumina data:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>convertFastqToFasta.py ONT_reads.fq
+	
+<span class="nb">cat </span>Illumina_reads_R1.fq Illumina_reads_R2.fq <span class="o">&gt;</span> Illumina_reads_combined.fq
+	
+tgsgapcloser <span class="nt">--scaff</span> scaffolded_assembly.fasta <span class="se">\</span>
+    <span class="nt">--reads</span> ONT_reads.fasta <span class="se">\</span>
+    <span class="nt">--ouput</span> assembly.gapclosed
+    <span class="nt">--ngs</span> Illumina_reads_combined.fq <span class="se">\</span>
+    <span class="nt">--pilon</span> /home/ps997/bin/pilon-1.24.jar <span class="se">\ </span><span class="c"># Change to match your system</span>
+    <span class="nt">--samtools</span> /usr/local/bin/samtools <span class="se">\ </span><span class="c"># Change to match your system</span>
+    <span class="nt">--java</span> /usr/bin/java <span class="c"># Change to match your system</span>
+</code></pre></div>  </div>
+</section>
+<p><!--Scaffolding end--></p>
+
+<section id="decontamination">
+  <h3>2d. Decontamination</h3>
+  <p>Scaffolded assemblies were checked for contamination using a combination of HiC contact heatmaps and <a href="https://blobtoolkit.genomehubs.org/blobtools2/">BlobTools2</a>. Illumina WGS reads were mapped to each genome with bwa; scaffold sequences were BLASTed against the NCBI nt database. BAM alignment and BLAST output were added into a BlobDir along with each genome.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bwa mem <span class="nt">-t</span> 24 scaffolded_assembly.fasta reads_1.fastq.gz reads_2.fastq.gz | samtools <span class="nb">sort</span> <span class="nt">-o</span> scaffolded_assembly.readsMapped.bam
+
+blastn <span class="nt">-db</span> nt <span class="se">\ </span><span class="c"># Database needs to be downloaded from NCBI. Change path to match your system</span>
+       <span class="nt">-query</span> scaffolded_assembly.fasta <span class="se">\</span>
+       <span class="nt">-outfmt</span> <span class="s2">"6 qseqid staxids bitscore std"</span> <span class="se">\</span>
+       <span class="nt">-max_target_seqs</span> 10 <span class="se">\</span>
+       <span class="nt">-max_hsps</span> 1 <span class="se">\</span>
+       <span class="nt">-evalue</span> 1e-25 <span class="se">\</span>
+       <span class="nt">-num_threads</span> 16 <span class="se">\</span>
+       <span class="nt">-out</span> blast.out
+       
+blobtools create <span class="se">\</span>
+    <span class="nt">--fasta</span> scaffolded_assembly.fasta <span class="se">\</span>
+    <span class="nt">--cov</span> assembly.reads.bam <span class="se">\</span>
+    <span class="nt">--hits</span> blast.out <span class="se">\</span>
+    <span class="nt">--taxrule</span> bestsumorder <span class="se">\</span>
+    <span class="nt">--taxdump</span> ~/taxdump <span class="se">\ </span><span class="c"># File needs to be downloaded from NCBI ftp://ftp.ncbi.nih.gov/pub/taxonomy/new_taxdump/new_taxdump.tar.gz and unpacked. Change path to match your system </span>
+    AssemblyName
+    
+blobtools view <span class="nt">--interactive</span>
+</code></pre></div>  </div>
+
+  <p>Open an interactive viewer. The coverage vs. %GC vs. BLAST hit graph is most informative – look for obvious outliers. I require at least two of the three criteria to differ from the primary genome to call a likely contaminant sequence. Then check likely contaminants in the HiC heatmap with JuiceBox Assembly Tools (JBAT). Contaminants should show no contact with the primary genome. If there is contact, consider other explanations e.g. HGT, misassembly. A new FASTA get be made using a custom script:</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>getFromFasta.py scaffolded_assembly.fasta scaffold100 &gt; contaminant.fasta
+
+getFromFasta.py -v scaffolded_assembly.fasta scaffold100 &gt; scaffolded_assembly.no_contaminants.fasta
+</code></pre></div>  </div>
+
+</section>
+<p><!-- Decontamination end--></p>
+
+<section id="repeat-annotation">
+  <h3>2e. Repeat Annotation</h3>
+  <p>Repeats were identified in a first pass by EDTA v2:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>EDTA.pl <span class="nt">--sensitive</span> 1 <span class="nt">--anno</span> 1 <span class="nt">--evaluate</span> 1 <span class="nt">-t</span> 12 <span class="se">\</span>
+<span class="nt">--genome</span> scaffolded_assembly.fasta <span class="se">\</span>
+<span class="nt">--repeatmasker</span> /home/ps997/bin/RepeatMasker/RepeatMasker <span class="se">\ </span><span class="c"># Change to match your system</span>
+<span class="nt">--cds</span> ~/HornwortBase_20210503/SPECIES_CDS.fna <span class="se">\ </span><span class="c"># OPTIONAL: I used these because I already had predicted CDS sequences from a previous round of annotation</span>
+&amp;&gt; edta.out <span class="c"># Capture the output for potential debugging</span>
+</code></pre></div>  </div>
+
+  <p>NOTE: EDTA doesn’t like long sequence names, you might have to rename them first with some simple Python code:</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">infile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"scaffolded_assembly.fasta"</span><span class="p">,</span><span class="s">"r"</span><span class="p">)</span>
+<span class="n">outfile</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="s">"scaffolded_assembly.renamed.fasta"</span><span class="p">,</span><span class="s">"w"</span><span class="p">)</span>
+<span class="n">counter</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+	<span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">):</span>
+		<span class="n">outfile</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"&gt;%s</span><span class="se">\n</span><span class="s">"</span> <span class="o">%</span> <span class="n">counter</span><span class="p">)</span>
+		<span class="n">counter</span> <span class="o">+=</span> <span class="mi">1</span>
+	<span class="k">else</span><span class="p">:</span>
+		<span class="n">outfile</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"%s"</span> <span class="o">%</span> <span class="n">line</span><span class="p">)</span>
+</code></pre></div>  </div>
+
+  <p>OPTIONAL: EDTA is often used as a stand-alone tool these days, but some additional processing may improve the transposable element (TE) library. These steps aim to recover protein-coding genes that were misidentified as LTRs, following steps from the <a href="https://weatherby.genetics.utah.edu/MAKER/wiki/index.php/Repeat_Library_Construction-Advanced">MAKER wiki</a>. Search databases are linked at the bottom of that page.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Pull out LTRs not identified as Copia or Gypsy type from the EDTA TE library</span>
+extract_unknownLTR.py scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa
+
+<span class="c"># BLAST search the unknown LTRs against a curated database of transposons</span>
+blastx <span class="nt">-query</span> scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa <span class="nt">-db</span> Tpases020812 <span class="nt">-evalue</span> 1e-10 <span class="nt">-num_descriptions</span> 10 <span class="nt">-out</span> scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa.blastx <span class="nt">-num_threads</span> 12
+
+<span class="c"># Parse the BLAST results and identify unknown LTRs with hits to known transposons</span>
+perl Custom-Repeat-Library/transposon_blast_parse.pl <span class="nt">--blastx</span>  scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa.blastx <span class="nt">--modelerunknown</span> scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.fa
+
+<span class="c"># Combine the LTRs that have BLAST hits to the main LTR library file. Rename the unknown LTRs file. </span>
+<span class="nb">cat </span>scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.fa identified_elements.txt <span class="o">&gt;</span> scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa
+<span class="nb">mv </span>unknown_elements.txt scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.unknown.final.fa
+
+<span class="c"># BLAST search the LTR library against UNIPROT plant protein database. </span>
+blastx <span class="nt">-db</span> uniprot_sprot_plants.fasta <span class="nt">-query</span> scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa <span class="nt">-out</span> uniprot_plant_blast.out <span class="nt">-num_threads</span> 12
+
+<span class="c"># Parse the BLAST results and remove LTRs that matched plant proteins.</span>
+perl ProtExcluder1.1/ProtExcluder.pl uniprot_plant_blast.out scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fa
+
+<span class="c"># Mask the repeats in the genome using this new LTR library. The `--xsmall` option softmasks the genome, which is preferred by BRAKER. </span>
+/home/ps997/bin/RepeatMasker/RepeatMasker <span class="nt">-noisy</span> <span class="nt">-a</span> <span class="nt">-gff</span> <span class="nt">-u</span> <span class="nt">-pa</span> 24 <span class="nt">--xsmall</span> <span class="nt">-lib</span> scaffolded_assembly.renamed.fasta.mod.EDTA.TElib.fa.LTRlib.known.final.fanoProtFinal scaffolded_assembly.renamed.fasta
+
+<span class="c"># Calculate stats</span>
+RepeatMasker/util/buildSummary.pl <span class="nt">-useAbsoluteGenomeSize</span> scaffolded_assembly.renamed.fasta.out <span class="o">&gt;</span> scaffolded_assembly.renamed.fasta.repeat-summary.txt
+</code></pre></div>  </div>
+
+  <p><b>Tandem Repeats Finder</b></p>
+  <p>The software <code class="language-plaintext highlighter-rouge">tandem repeats finder</code> (TRF) can find additional tandem repeats that are associated with centromeres and telomeres. To avoid double-counting repeats already identified by EDTA/RepeatMasker, we use a hard-masked version of the genome output by RepeatMasker. </p>
+
+  <p>Run TRF:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trf scaffolded_assembly.renamed.fasta.masked 2 7 7 80 10 50 2000 <span class="nt">-h</span> <span class="nt">-d</span> <span class="nt">-m</span> <span class="nt">-ngs</span> <span class="o">&gt;</span> trf_out.txt
+</code></pre></div>  </div>
+
+  <p>Convert TRF output to GFF, then combine with the repeats GFF file produced by EDTA/RepeatMasker and sort so they are in genomic order.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>trf2gff.py trf_out.txt 50 <span class="o">&gt;</span> trf_out_min50.gff
+
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{print $1"\t"$2"\ttandem_repeat\t"$4"\t"$5"\t"$6"\t"$7"\t"$8"\t"$9}'</span> trf_out_min50.gff <span class="o">&gt;</span> trf_out_min50.renamed.gff
+
+<span class="nb">cat </span>other_repeats.gff trf_out_min50.renamed.gff | <span class="nb">sort</span> <span class="nt">-k1</span>,1 <span class="nt">-k</span> 4,4n <span class="o">&gt;</span> all_repeats.gff
+</code></pre></div>  </div>
+
+</section>
+<p><!--Repeat annotation end--></p>
+
+<section id="gene-prediction">
+  <h3>2f. Gene Prediction</h3>
+  <p>Gene models were predicted using a developement version of BRAKER3 (), with input consisting of Illumina RNA reads mapped to the softmasked genome using HISAT2 () and predicted hornwort proteins from published <i>Anthoceros</i> genomes (Li et al 2020, Zhang et al. 2020). BRAKER output files were screened for genes with in-frame stop codons, which were marked as pseudogenes in the corresponding GTF file. Genes were renamed to contain their respective scaffold/contig name plus a number incremented by 100, restarting at the beginning of each scaffold/contig. Subsets of primary transcripts were created by selecting the longest transcript associated with each gene.
+</p>
+  <p><br />
+<b>Code for mapping RNA reads and running BRAKER and processing output</b><br /></p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hisat2-build <span class="nt">-p</span> 12 scaffolded_assembly.renamed.fasta.masked.fasta scaffolded_assembly.renamed.fasta.masked.fasta
+
+hisat2 <span class="nt">-p</span> 12 <span class="nt">-x</span> scaffolded_assembly.renamed.fasta.masked.fasta <span class="nt">-1</span> RNA_R1.fq.gz <span class="nt">-2</span> RNA_R2.fq.gz 2&gt; hisat-align.out | samtools <span class="nb">sort</span> <span class="nt">-o</span> scaffolded_assembly.renamed.fasta.masked.RNAmapped.bam
+
+braker.pl <span class="se">\</span>
+<span class="nt">--genome</span> scaffolded_assembly.renamed.fasta.masked.fasta <span class="se">\</span>
+<span class="nt">--bam</span> scaffolded_assembly.renamed.fasta.masked.RNAmapped.bam <span class="se">\</span>
+<span class="nt">--prot_seq</span> Hornwort_orthogroups.faa <span class="se">\ </span><span class="c"># Protein sequences from shared orthogroups from previously published hornwort genomes </span>
+<span class="nt">--prg</span><span class="o">=</span>gth <span class="se">\</span>
+<span class="nt">--gth2traingenes</span> <span class="se">\</span>
+<span class="nt">--verbosity</span> 3 <span class="se">\</span>
+<span class="nt">--cores</span> 12 <span class="se">\</span>
+<span class="nt">--nocleanup</span> <span class="se">\</span>
+<span class="nt">--softmasking</span>
+</code></pre></div>  </div>
+
+  <p><b>Filter genes with in-frame stop codons</b><br /></p>
+  <p>BRAKER will sometimes predict proteins that contain in-frame (internal) stop codons. In the BRAKER-produced CDS/AA FASTA files, the sequences in the bad regions are masked with N (CDS) or X (AA), but the GTF file will still contain annotation that creates a bad sequence. Following NCBI protocol for genes that are ‘broken’ but are not thought to be pseudogenes, these will get annotated with <code class="language-plaintext highlighter-rouge">pseudo=true</code>. The easiest starting point is the <code class="language-plaintext highlighter-rouge">bad_genes.lst</code> if you ran BRAKER with the <code class="language-plaintext highlighter-rouge">--nocleanup</code> option. If you didn’t, make a new translation from the GTF:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gffread <span class="nt">-y</span> proteins.fasta <span class="nt">-g</span> genome.fasta augustus.hints.gtf
+</code></pre></div>  </div>
+
+  <p>Then search for sequences with periods (representing stop codons), and write them to <code class="language-plaintext highlighter-rouge">bad_genes.lst</code></p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"proteins.fasta"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s">"bad_genes.lst"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+	<span class="n">bad_genes</span> <span class="o">=</span> <span class="p">[]</span>
+	<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">):</span>
+			<span class="n">seqid</span> <span class="o">=</span> <span class="n">line</span><span class="p">.</span><span class="n">strip</span><span class="p">(</span><span class="s">"&gt;|</span><span class="se">\n</span><span class="s">"</span><span class="p">)</span>
+		<span class="k">elif</span> <span class="s">"."</span> <span class="ow">in</span> <span class="n">line</span> <span class="ow">and</span> <span class="n">seqid</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">bad_genes</span><span class="p">:</span>
+			<span class="n">bad_genes</span><span class="p">.</span><span class="n">append</span><span class="p">(</span><span class="n">seqid</span><span class="p">)</span>
+			<span class="n">outfile</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="s">"%s</span><span class="se">\n</span><span class="s">"</span> <span class="o">%</span> <span class="n">seqid</span><span class="p">)</span>
+</code></pre></div>  </div>
+
+  <p><b>Rename Contigs and Genes</b></p>
+  <p>You’ll probably want to rename the contigs and genes in the fasta and gff/gtf files associated with each genome. The input genome and any annotations must match (e.g. can’t use RepeatModeler annotations if you renamed the genome for EDTA). Here it may be advisable to add a unique ID or version number to link this particular genome assembly and annotation. Comment lines can be added to the header of the final GFF/GTF and fasta metadata can be added to sequence names. In this example, I start with the genome that was temporarily renamed to run EDTA.</p>
+
+  <p><b>Naming conventions for hornwort genomes:</b></p>
+  <ol>
+	<li>Scaffolds: Two letters of genus + three letters of species (optional information after this e.g cultivar, sex) + period + S/C (for scaffold or contig) + number (order determined by longest to shortest length).</li>
+	<li>Genes: Scaffold ID + G + six digit number unique to each gene. Genes increment by 100 and numbering restarts for each sequence.</li>
+	<li>Transcripts: Gene ID + "." + transcript number (increments by 1).</li>
+</ol>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Get the length of all sequences in order to rename from shortest to longest</span>
+getFastaSeqLengths.py PGA_assembly.gapcloser.scaff_seqs.renamed.fasta
+<span class="nb">sort</span> <span class="nt">-k2</span>,2nr PGA_assembly.gapcloser.scaff_seqs.renamed.fasta_sequence_lengths.tmp <span class="o">&gt;</span> genome.fa_sequence_lengths.tsv.sorted.tmp
+
+<span class="c"># Change "j" to the prefix of the names that will be the same in all sequences. Change "id" if using a unique ID for this genome and its annotations</span>
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="nt">-v</span> <span class="nv">i</span><span class="o">=</span><span class="s2">"1"</span> <span class="nt">-v</span> <span class="nv">j</span><span class="o">=</span><span class="s2">"AnagrOXF.C"</span> <span class="nt">-v</span> <span class="nb">id</span><span class="o">=</span><span class="s2">"v1"</span> <span class="s1">'{ print $1"\t"j""i++" id="id }'</span> genome.fa_sequence_lengths.tsv.sorted.tmp <span class="o">&gt;</span> genome.fa_sequence_lengths.tsv.new_contig_names.tsv
+
+<span class="c">### NOTE: Here I manually edit the *new_contig_names.tsv file to change scaffold/contig designations</span>
+renameFastaAndReorder.py PGA_assembly.gapcloser.scaff_seqs.renamed.fasta genome.fa_sequence_lengths.tsv.new_contig_names.tsv
+
+<span class="c"># Rename a BRAKER GTF file</span>
+renameGTF_Phytozome.py <span class="nt">-i</span> augustus.hints.gtf <span class="nt">--contig-table</span> genome.fa_sequence_lengths.tsv.new_contig_names.tsv <span class="nt">--assembly-id</span> 6cde96438c2e713efa5c285e4fe3a62d
+</code></pre></div>  </div>
+
+  <p><b>Create pseudo-gene annotated GTF</b><br /></p>
+  <p>Run <code>renameGTF_Phytozome.py</code> with <code>--bad-genes bad_genes.lst</code>. It will add <code>pseudo=true</code> to the GTF file to mark broken genes in <a href="https://www.ncbi.nlm.nih.gov/genbank/genomes_gff/">NCBI style</a>.</p>
+  <p><br />
+<b>Create primary transcript file</b></p>
+  <p>This creates a new file with the longest transcript for each gene. Only works assuming sequence IDs end in “.t<i>n</i>” and everything preceeding is a unique gene ID. Depending on the gene prediction software, “.t1” transcripts may be decided as the transcript with the highest support. However, we found that using only “.t1” transcripts as the primary transcripts created a decrease in complete BUSCOs of several percentage points, whereas using the longest transcripts did not have this effect.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>removeAlternativeTranscripts.py braker.faa
+</code></pre></div>  </div>
+
+</section>
+<p><!--Gene prediction end--></p>
+
+<section id="functional">
+  <h3>2g. Functional Annotation</h3>
+  <p>Gene functions were predicted using the eggNOG mapper tool by comparison to the eggNOG 5.0 database using default search settings.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>emapper.py <span class="nt">-i</span> braker.faa <span class="nt">-o</span> species_name
+</code></pre></div>  </div>
+
+  <p>Domains within proteins were also annotated by pfam_scan, using the amino acid sequences as input.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>pfam_scan.pl <span class="nt">-fasta</span> braker.faa <span class="se">\</span>
+<span class="nt">-dir</span> ~/pfamDB/ <span class="se">\ </span><span class="c"># Change to wherever you downloaded your PFAM databse</span>
+<span class="nt">-cpu</span> 24 <span class="se">\</span>
+<span class="o">&gt;</span> braker.faa.pfams
+
+</code></pre></div>  </div>
+
+</section>
+<p><!--Functional annotation end--></p>
+
+<section id="methylation">
+  <h3>2h. Methylation</h3>
+  <p>Methylation was called using Oxford Nanopore Technology’s <code class="language-plaintext highlighter-rouge">megalodon</code>:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>megalodon ../nanopore_reads/ <span class="nt">--guppy-config</span> dna_r9.4.1_450bps_hac.cfg <span class="nt">--remora-modified-bases</span> dna_r9.4.1_e8 hac 0.0.0 5mc CG 0 <span class="nt">--outputs</span> basecalls mappings mods <span class="nt">--reference</span> ../genome/genome.fasta <span class="nt">--devices</span> 0 <span class="nt">--processes</span> 12 <span class="nt">--guppy-server-path</span> /usr/bin/guppy_basecall_server
+</code></pre></div>  </div>
+
+  <p><b>WARNING!</b> The BED file produced by megalodon is not sorted – if you use it for downstream analysis it will give inaccurate results. To sort:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bedtools <span class="nb">sort</span> <span class="nt">-i</span> modified_bases.5mC.bed <span class="o">&gt;</span> modified_bases.5mC.sorted.bed
+</code></pre></div>  </div>
+
+  <p>Column 10 is the read depth at a particular site; column 11 is the % of those reads that had a CG modification. Most of the filtering will be done on those two metrics. For example, you may want to remove sites with no coverage so they don’t overrepresent the propartion of unmethylated sites in the genome:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{if ($10 == 0) print $0}'</span> modified_bases.5mC.sorted.bed <span class="o">&gt;</span> modified_bases.5mC.sorted.rmMissing.bed
+</code></pre></div>  </div>
+
+  <p>Comparing methylated sites and genome features also requires a GFF format file for the features of interest.</p>
+  <p><br /></p>
+  <p><b>Gene Body Methylation</b></p>
+  <p>This section calculated the rate of methylated CG sites over gene exons and adjacent upstream/downstream non-coding regions. Some important caveats for my approach:</p>
+  <ul>
+	<li>Only hornwort annotations produced by BRAKER have been tested</li>
+	<li>Some field values (esp. GFF column 3) may be different in other genomes</li>
+	<li>"gene" objects are expected to represent only the gene body between start and stop codons (inclusive), not UTRs. On gene lines in the GFF file, field 9 must be ID=geneID, where geneID is whatever unique identifier they have. The gene ID cannot be a substring of another element in the annotation file. E.g. genes labeled g10 and g100 cannot be used (otherwise grep commands will find the wrong matches)</li>
+	<li>"exon" objects are expected to represent just the parts that make up the CDS. They must include the parent gene ID somewhere in field 9</li>
+</ul>
+  <p>First, some setup:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Make a list of gene IDs, used for searching later</span>
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($3 == "gene") print $9}'</span> gene_annotations.gff | <span class="nb">cut</span> <span class="nt">-f</span> 2 <span class="nt">-d</span> <span class="s2">"="</span> <span class="o">&gt;&gt;</span> geneIDs.txt
+
+<span class="c"># Make subdirectories for new files</span>
+<span class="nb">mkdir </span>genes
+<span class="nb">mkdir </span>exons
+<span class="nb">mkdir </span>upstream_1kb
+<span class="nb">mkdir </span>downstream_1kb
+</code></pre></div>  </div>
+
+  <p>Next, get just the “gene” lines out of the GFF, making a new file for each gene in the <code class="language-plaintext highlighter-rouge">./genes/</code> directory:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat </span>geneIDs.txt | <span class="k">while </span><span class="nb">read </span>i <span class="p">;</span> <span class="k">do </span><span class="nb">grep</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span> gene_annotations.gff | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($3 == "gene") print $0}'</span> <span class="o">&gt;</span> genes/<span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.gff <span class="p">;</span> <span class="k">done</span>
+</code></pre></div>  </div>
+
+  <p>Get just the exon lines from the main GFF, put into one new file in the <code class="language-plaintext highlighter-rouge">./exons</code> directory:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($3 == "exon") print $0}'</span> gene_annotations.gff | sortBed <span class="nt">-i</span> - | bedtools merge <span class="nt">-i</span> - <span class="o">&gt;</span> exons/exons.bed
+</code></pre></div>  </div>
+
+  <p>Calculate the upstream and downstream 1kb regions for each gene. The long <code class="language-plaintext highlighter-rouge">awk</code> command simply looks at the orientation of the gene, then adds or subtracts 1000 to the gene region as appropriate, and formats the new region in GFF format.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($3 == "gene" &amp;&amp; $7 == "+") print $1"\t"$2"\tupstream\t"($4-1000)"\t"$4"\t"$6"\t"$7"\t"$8"\t"$9; else if ($3 =="gene" &amp;&amp; $7 == "-" ) print ($1"\t"$2"\tupstream\t"$5"\t"($5+1000)"\t"$6"\t"$7"\t"$8"\t"$9) }'</span> gene_annotations.gff <span class="o">&gt;</span> upstream_1kb/upstream.gff
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($3 == "gene" &amp;&amp; $7 == "+") print $1"\t"$2"\tdownstream\t"$5"\t"($5+1000)"\t"$6"\t"$7"\t"$8"\t"$9; else if ($3 == "gene" &amp;&amp; $7 == "-" ) print ($1"\t"$2"\tdownstream\t"$4-1000"\t"$4"\t"$6"\t"$7"\t"$8"\t"$9) }'</span> gene_annotations.gff <span class="o">&gt;</span> downstream_1kb/downstream.gff
+</code></pre></div>  </div>
+
+  <p>Remove any negative values from the upstream/downstream regions (for genes near ends of sequences):</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($4 &lt; 1) print $1"\t"$2"\t"$3"\t1\t"$5"\t"$6"\t"$7"\t"$8"\t"$9; else print $0}'</span> upstream_1kb/upstream.gff <span class="o">&gt;</span> upstream_1kb/upstream.pos.gff
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($4 &lt; 1) print $1"\t"$2"\t"$3"\t1\t"$5"\t"$6"\t"$7"\t"$8"\t"$9; else print $0}'</span> downstream_1kb/downstream.gff <span class="o">&gt;</span> downstream_1kb/downstream.pos.gff
+</code></pre></div>  </div>
+  <p>Now that all the gene region files are ready, we can start to intersect those regions with the 5mC CG modifications BED file:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bedtools intersect <span class="nt">-a</span> modified_bases.5mC.sorted.bed <span class="nt">-b</span> exons/exons.bed <span class="o">&gt;</span> exons/exons.CpG.bed
+bedtools intersect <span class="nt">-a</span> modified_bases.5mC.sorted.bed <span class="nt">-b</span> upstream_1kb/upstream.pos.gff <span class="o">&gt;</span> upstream_1kb/upstream.CpG.bed
+bedtools intersect <span class="nt">-a</span> modified_bases.5mC.sorted.bed <span class="nt">-b</span> downstream_1kb/downstream.pos.gff <span class="o">&gt;</span> downstream_1kb/downstream.CpG.bed
+</code></pre></div>  </div>
+
+  <p>Since sites with low coverage may innaccurately represent their true % modification, you may want to remove them. The cutoff will vary depending on your experiment and sequencing depth. This example requires at least 5 reads per site, in a dataset with median sequencing depth of ~50X.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{if ($10 &gt;= 5) print $1"\t"$2"\t"$3"\t"$4"\t"$11}'</span> exons/exons.CpG.bed <span class="o">&gt;</span> exons/exons.CpG.filt.bed
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{if ($10 &gt;= 5) print $1"\t"$2"\t"$3"\t"$4"\t"$11}'</span> upstream_1kb/upstream.CpG.bed <span class="o">&gt;</span> upstream_1kb/upstream.CpG.filt.bed
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{if ($10 &gt;= 5) print $1"\t"$2"\t"$3"\t"$4"\t"$11}'</span> downstream_1kb/downstream.CpG.bed <span class="o">&gt;</span> downstream_1kb/downstream.CpG.filt.bed
+</code></pre></div>  </div>
+
+  <p>Next, the CG modifications are averaged over portions of each sequence. In upstream/downstream regions, 100 bp windows are used (<code class="language-plaintext highlighter-rouge">-n 10</code>); since gene lengths vary, each gene is broken into 20 windows (<code class="language-plaintext highlighter-rouge">-n 20</code>) that will vary in size between genes. Having an equal number of windows is necessary to be able to “stack” all the genes for comparison.</p>
+  <p>WARNING: These steps are slow (at least several minutes). Do within exons, upstream_1kb, and downstream_1kb directories:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># For upstream/downstream:</span>
+<span class="nb">cat</span> ../geneIDs.txt | <span class="k">while </span><span class="nb">read </span>i <span class="p">;</span> <span class="k">do </span><span class="nb">grep</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span> upstream.pos.gff | bedtools makewindows <span class="nt">-n</span> 10 <span class="nt">-b</span> - | sortBed <span class="nt">-i</span> - | bedmap <span class="nt">--echo</span> <span class="nt">--mean</span> - upstream.CpG.filt.bed | <span class="nb">sed</span> <span class="nt">-e</span> <span class="s1">'s/|/\t/g'</span> | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{print $1"\t"$2"\t"$3"\t"$4}'</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.windowavg.bed <span class="p">;</span> <span class="k">done
+</span><span class="nb">cat</span> ../geneIDs.txt | <span class="k">while </span><span class="nb">read </span>i <span class="p">;</span> <span class="k">do </span><span class="nb">grep</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span> downstream.pos.gff | bedtools makewindows <span class="nt">-n</span> 10 <span class="nt">-b</span> - | sortBed <span class="nt">-i</span> - | bedmap <span class="nt">--echo</span> <span class="nt">--mean</span> - downstream.CpG.filt.bed | <span class="nb">sed</span> <span class="nt">-e</span> <span class="s1">'s/|/\t/g'</span> | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{print $1"\t"$2"\t"$3"\t"$4}'</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.windowavg.bed <span class="p">;</span> <span class="k">done</span>
+<span class="c"># For exons:</span>
+<span class="nb">cat</span> ../geneIDs.txt | <span class="k">while </span><span class="nb">read </span>i <span class="p">;</span> <span class="k">do </span>bedtools makewindows <span class="nt">-n</span> 20 <span class="nt">-b</span> ../genes/<span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.gff | sortBed <span class="nt">-i</span> - | bedmap <span class="nt">--echo</span> <span class="nt">--mean</span> - exons.CpG.filt.bed | <span class="nb">sed</span> <span class="nt">-e</span> <span class="s1">'s/|/\t/g'</span> | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{print $1"\t"$2"\t"$3"\t"$4}'</span> <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.windowavg.bed <span class="p">;</span> <span class="k">done</span>
+</code></pre></div>  </div>
+
+  <p>Reorient genes so they’re all in the same direction. Repeat in each upsteam, downstream, exons directory.</p>
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> ../geneIDs.txt | <span class="k">while </span><span class="nb">read </span>i <span class="p">;</span> <span class="k">do </span><span class="nb">grep</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span> ../gene_annotations.gff | <span class="nb">grep</span> <span class="nt">-w</span> <span class="s2">"gene"</span> | <span class="k">if</span> <span class="o">[</span> <span class="si">$(</span><span class="nb">cut</span> <span class="nt">-f</span> 7<span class="si">)</span> <span class="o">==</span> <span class="s2">"+"</span> <span class="o">]</span> <span class="p">;</span> <span class="k">then </span><span class="nb">cat</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.windowavg.bed <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.windowavg.oriented.bed <span class="p">;</span> <span class="k">else </span><span class="nb">tac</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.windowavg.bed <span class="o">&gt;</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.windowavg.oriented.bed<span class="p">;</span> <span class="k">fi</span> <span class="p">;</span> <span class="k">done</span>
+</code></pre></div>  </div>
+
+  <p>Remove any genes that were too short or pseudogenes and did not produce output:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find <span class="nb">.</span> <span class="nt">-size</span> 0 <span class="nt">-delete</span>
+</code></pre></div>  </div>
+
+  <p>Convert everything into long-data format to send to R for plotting. Do this in the directory above the separate exons, upstream, and downstream ones.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for </span>i <span class="k">in </span>upstream_1kb/<span class="k">*</span>oriented.bed <span class="p">;</span> <span class="k">do </span><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="nt">-v</span> <span class="nv">j</span><span class="o">=</span>1 <span class="s1">'{print j++"\t"$4}'</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>  <span class="o">&gt;&gt;</span> combined.tsv <span class="p">;</span> <span class="k">done
+for </span>i <span class="k">in </span>exons/<span class="k">*</span>oriented.bed <span class="p">;</span> <span class="k">do </span><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="nt">-v</span> <span class="nv">j</span><span class="o">=</span>11 <span class="s1">'{print j++"\t"$4}'</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>  <span class="o">&gt;&gt;</span> combined.tsv <span class="p">;</span> <span class="k">done
+for </span>i <span class="k">in </span>downstream_1kb/<span class="k">*</span>oriented.bed <span class="p">;</span> <span class="k">do </span><span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="nt">-v</span> <span class="nv">j</span><span class="o">=</span>31 <span class="s1">'{print j++"\t"$4}'</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>  <span class="o">&gt;&gt;</span> combined.tsv <span class="p">;</span> <span class="k">done</span>
+
+<span class="c"># Remove any missing data</span>
+<span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ($2 != "NAN") print $0}'</span> combined.tsv <span class="o">&gt;</span> combined.rmNA.tsv
+</code></pre></div>  </div>
+
+  <p>Import the data into R to produce a line plot of the averaged CG methylation:</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span><span class="w">
+</span><span class="n">speciesName</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s2">"Species name"</span><span class="w">
+</span><span class="n">combined</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.delim</span><span class="p">(</span><span class="s2">"combined.rmNA.tsv"</span><span class="p">,</span><span class="w"> </span><span class="n">header</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">F</span><span class="p">,</span><span class="w"> </span><span class="n">sep</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"\t"</span><span class="p">)</span><span class="w">
+</span><span class="n">combined</span><span class="o">$</span><span class="n">V1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">combined</span><span class="o">$</span><span class="n">V1</span><span class="p">)</span><span class="w">
+</span><span class="n">ggplot</span><span class="p">(</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">combined</span><span class="p">,</span><span class="w"> </span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">V1</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">V2</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">stat_summary</span><span class="p">(</span><span class="n">fun.min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">quantile</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="m">0.25</span><span class="p">)</span><span class="w"> </span><span class="p">},</span><span class="w">
+               </span><span class="n">fun.max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">z</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">quantile</span><span class="p">(</span><span class="n">z</span><span class="p">,</span><span class="m">0.75</span><span class="p">)</span><span class="w"> </span><span class="p">},</span><span class="w">
+               </span><span class="n">fun</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">median</span><span class="p">,</span><span class="w"> </span><span class="n">geom</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"line"</span><span class="p">,</span><span class="w"> </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"red"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> 
+  </span><span class="n">ylab</span><span class="p">(</span><span class="s2">"Median % CG modification"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">xlab</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">ylim</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">ggtitle</span><span class="p">(</span><span class="n">speciesName</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> 
+  </span><span class="n">scale_x_continuous</span><span class="p">(</span><span class="n">breaks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">11</span><span class="p">,</span><span class="m">30</span><span class="p">,</span><span class="m">40</span><span class="p">),</span><span class="w"> </span><span class="n">labels</span><span class="o">=</span><span class="nf">c</span><span class="p">(</span><span class="s2">"1"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"-1 Kbp"</span><span class="p">,</span><span class="w"> </span><span class="s2">"11"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Start"</span><span class="p">,</span><span class="w"> </span><span class="s2">"30"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Stop"</span><span class="p">,</span><span class="w"> </span><span class="s2">"40"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"+1 Kbp"</span><span class="p">))</span><span class="w">
+</span></code></pre></div>  </div>
+
+</section>
+
+<section id="orthogroups">
+  <h3>2i. Orthogroup Inference</h3>
+  <p>Orthogroups were constructed with <a href="https://github.com/davidemms/OrthoFinder">Orthofinder 2.5.4</a> using protein sequence input from genomes selected to represent a broad sampling across Viridiplantae. Because each genome and its genes are annotated differently, custom filtering methods were needed for most genomes to create informative sequence IDs and remove alternative transcripts. A selection of methods follow:</p>
+
+  <p><b><i>Isoetes taiwanensis</i></b>: restructure names to represent just the unique transcript ID and remove alternative transcripts.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep</span> <span class="s2">"&gt;"</span> Isoetes_taiwanensis_61511-CDS-prot.fasta | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"|"</span> <span class="s1">'{print $0"\t"$9}'</span> <span class="o">&gt;</span> Isoetes_taiwanensis_61511-CDS-prot.fasta.rename-table.tsv
+
+<span class="nb">sed</span> <span class="nt">-i</span> <span class="s2">"s/&gt;//"</span> Isoetes_taiwanensis_61511-CDS-prot.fasta.rename-table.tsv
+
+renameFasta.py Isoetes_taiwanensis_61511-CDS-prot.fasta Isoetes_taiwanensis_61511-CDS-prot.fasta.rename-table.tsv
+
+<span class="nb">grep</span> <span class="s2">"</span><span class="se">\-</span><span class="s2">RA"</span> Isoetes_taiwanensis_61511-CDS-prot_renamed.fasta | getFromFasta.py Isoetes_taiwanensis_61511-CDS-prot_renamed.fasta - <span class="o">&gt;</span> 
+Isoetes_taiwanensis_61511-CDS-prot_renamed.primary_transcripts.fasta
+</code></pre></div>  </div>
+
+  <p><b><i>Chara braunii</i></b>: remove alternative (shortest) transcripts when sequences are named with the <code class="language-plaintext highlighter-rouge">.t&lt;number&gt;</code> suffix.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>removeAlternativeTranscripts.py chbra_iso_noTE_23546_pep.fasta
+</code></pre></div>  </div>
+
+  <p><b><i>Alsophila spinulosa</i></b>: replace in-frame stop codons with unknown amino acids. In Python:</p>
+
+  <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="nn">re</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s">"Alsophila_spinulosa_v3.1_protein.fa"</span><span class="p">,</span> <span class="s">"r"</span><span class="p">)</span> <span class="k">as</span> <span class="n">infile</span><span class="p">,</span> <span class="nb">open</span><span class="p">(</span><span class="s">"Alsophila_spinulosa_v3.1_protein.IFSconverted.fa"</span><span class="p">,</span> <span class="s">"w"</span><span class="p">)</span> <span class="k">as</span> <span class="n">outfile</span><span class="p">:</span>
+	<span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">infile</span><span class="p">:</span>
+		<span class="k">if</span> <span class="n">line</span><span class="p">.</span><span class="n">startswith</span><span class="p">(</span><span class="s">"&gt;"</span><span class="p">):</span>
+			<span class="n">outfile</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+		<span class="k">else</span><span class="p">:</span>
+			<span class="n">outfile</span><span class="p">.</span><span class="n">write</span><span class="p">(</span><span class="n">re</span><span class="p">.</span><span class="n">sub</span><span class="p">(</span><span class="s">"\."</span><span class="p">,</span> <span class="s">"X"</span><span class="p">,</span> <span class="n">line</span><span class="p">))</span>
+</code></pre></div>  </div>
+
+  <p><b><i>Spirogloea muscicola</i></b>: check for alternative transcripts when lacking any information in transcript id:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Convert FASTA header information to BED format:</span>
+<span class="nb">grep</span> <span class="s2">"&gt;"</span> Spirogloea_muscicola_gene.pep.fasta | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">" |:|="</span> <span class="s1">'{print $6"\t"$7"\t"$8"\t"$1"\t0\t"$9}'</span> | <span class="nb">sort</span> <span class="nt">-k</span> 1,1 <span class="nt">-k</span> 2,2n <span class="o">&gt;</span> Spirogloea_muscicola_gene.pep.fasta.sorted.bed
+
+<span class="c"># Use bedtools to merge overlapping or touching regions:</span>
+bedtools merge <span class="nt">-i</span> Spirogloea_muscicola_gene.pep.fasta.sorted.bed <span class="nt">-d</span> 0 <span class="nt">-s</span> <span class="nt">-c</span> 1,4 <span class="nt">-o</span> count,distinct | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">"</span> <span class="s1">'{ if ( $4 &gt; 1 ) print $0}'</span>
+</code></pre></div>  </div>
+
+  <p>Once all genomes were checked and modified as needed, run Orthofinder:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>orthofinder <span class="nt">-M</span> msa <span class="nt">-t</span> 24 <span class="nt">-S</span> diamond <span class="nt">-A</span> mafft <span class="nt">-T</span> fasttree <span class="nt">-X</span> <span class="nt">-f</span> ./orthofinder_input/
+</code></pre></div>  </div>
+
+  <p>With the sequence files for each orthogroup, I generated more accurate phylogenies by aligning each orthogroup with Clustal Omega, trimming sites with &gt;90% gaps to remove spurious alignments, and inferred phylognies with IQ-TREE with standard model selection and 5000 ultrafast bootstrap replicates. Note use of <code class="language-plaintext highlighter-rouge">find</code> because the file list is usually too long for using wildcards. </p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>find . -name "OG*fa" | while read i ; do clustalo --auto -i "$i" -o "$i".CLUSTAL.fa ; done
+
+find . -name "OG*CLUSTAL.fa" | while read i ; do trimal -in "$i" -out "$i".TRIM.fa -gt 0.1
+
+find . -name "OG*TRIM.fa" | while read i ; do iqtree -s "$i" -T 4 -B 5000 -m TEST ; done
+</code></pre></div>  </div>
+
+</section>
+
+<section id="synteny">
+  <h3>2j. Synteny</h3>
+  <p><b>Extracting syntenic blocks</b></p>
+  <p>Synteny among hornwort genomes was inferred with GENESPACE. I attempted to run with other bryophyte genomes, but no synteny was found.</p>
+
+  <p>Primary transcript protein FASTAs were downloaded from HornwortBase, Phytozome, CoGe, and other sources. Because naming scemes across GFF/FASTA pairs varies, each genome had to be manually inspected and different methods developed to match the sequence names in the FASTA with the GFF entries. GFFs then need to be subsetted so there is a single entry per sequence in the FASTA. Finally, GFF files were converted into a simplified 4-column BED format, and FASTA and BED files were renamed to match each other.</p>
+
+  <p><b>Convert Phytozome FASTAs</b></p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep</span> <span class="s2">"&gt;"</span> CpurpureusGG1_539_v1.1.protein_primaryTranscriptOnly.fa | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">" |="</span> <span class="s1">'{print $0"\t"$7}'</span> <span class="o">&gt;</span> Ceratodon_purpureus_GG1.convert.tsv
+
+renameFasta.py CpurpureusGG1_539_v1.1.protein_primaryTranscriptOnly.fa Ceratodon_purpureus_GG1.convert.tsv
+
+<span class="nb">mv </span>CpurpureusGG1_539_v1.1.protein_primaryTranscriptOnly_renamed.fa Ceratodon_purpureus_GG1.fa
+</code></pre></div>  </div>
+
+  <p><b>Convert GFF to simplified BED</b></p>
+  <p>For Phytozome:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep</span> <span class="nt">-w</span> <span class="s2">"gene"</span> Ppatens_318_v3.3.gene.gff3 | gff2bed | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">|=|;"</span> <span class="s1">'{print $1"\t"$2"\t"$3"\t"$13}'</span> <span class="o">&gt;</span> Ppatens_318_v3.3.gene.bed  
+</code></pre></div>  </div>
+
+  <p>For HornwortBase:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep</span> <span class="nt">-w</span> <span class="s2">"gene"</span> Anthoceros_agrestis_Oxford_gene_annotations.gff | gff2bed | <span class="nb">awk</span> <span class="nt">-F</span><span class="s2">"</span><span class="se">\t</span><span class="s2">|=|;"</span> <span class="s1">'{print $1"\t"$2"\t"$3"\t"$11}'</span> <span class="o">&gt;</span> Anthoceros_agrestis_Oxford.bed
+</code></pre></div>  </div>
+
+  <p><b>Run Genespace in R:</b></p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">GENESPACE</span><span class="p">)</span><span class="w">
+</span><span class="n">gpar</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">init_genespace</span><span class="p">(</span><span class="n">wd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~/genespace"</span><span class="p">,</span><span class="w"> </span><span class="n">path2mcscanx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"~/bin/MCScanX/"</span><span class="w">
+</span><span class="n">out</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">run_genespace</span><span class="p">(</span><span class="n">gsParam</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gpar</span><span class="p">)</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p><b></b></p>
+  <p>Information about syntenic blocks was extracted from GENESPACE output file in <code class="language-plaintext highlighter-rouge">GENESPACE-DIR/results/syntenicBlock_coordinates.tsv</code>.</p>
+
+  <p>To get stats about block size between pairs of genomes:</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">grep</span> <span class="s2">"AnagrBONN"</span> syntenicBlock_coordinates.csv | <span class="nb">grep</span> <span class="s2">"AnagrOXF"</span> | <span class="nb">sed</span> <span class="s1">'s/,/\t/g'</span> | <span class="nb">cut</span> <span class="nt">-f</span> 5,12 | <span class="nb">sort</span> | <span class="nb">uniq</span> | <span class="nb">cut</span> <span class="nt">-f</span> 2 | summaryStats.R
+</code></pre></div>  </div>
+
+  <p>Note that the sort and uniq commands are used to avoid double-counting the same block in both orientations.</p>
+
+</section>
+<p><!--Synteny end--></p>
+
+<section id="gene-expression">
+  <h3>2k. Gene Expression</h3>
+  <p>Gene expression was calculated by mapping RNA reads to the respective genome with Hisat2 and analyzed with Stringtie. Hisat2 indexes were built with splice site and exon information generated from the genome’s GTF annotation file. The hisat2 script <code class="language-plaintext highlighter-rouge">hisat2_extract_exons.py</code> was modified to work with GTF files produced by BRAKER.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hisat2_extract_splice_sites.py braker.gtf <span class="o">&gt;</span> ss.txt
+hisat2_extract_exons_BRAKER.py <span class="o">&gt;</span> exon.txt
+hisat2-build <span class="nt">--ss</span> ss.txt <span class="nt">--exon</span> exon.txt genome.fasta genome.fasta
+</code></pre></div>  </div>
+
+  <p>Differential expression in <i>Notothylas orbicularis</i> followed the HISAT2-Stringtie-Ballgown pipeline as described in the Stringtie documentation (). In brief, each replicate RNAseq dataset was mapped to the genome with HISAT2 and the alignment used to assemble transcripts with Stringtie.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hisat2 <span class="nt">-p</span> 24 <span class="nt">--dta</span> <span class="nt">-x</span> genome.fasta <span class="nt">-1</span> sample1_RNA_reads_R1.fq.gz <span class="nt">-2</span> sample1_RNA_reads_R2.fq.gz | samtools <span class="nb">sort</span> <span class="nt">-o</span> genome.sample1_RNA.bam
+
+<span class="k">for </span>i <span class="k">in </span>genome.sample<span class="k">*</span>RNA.bam <span class="p">;</span> <span class="k">do </span>stringtie <span class="nt">-o</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.stringtie.gtf <span class="nt">-G</span> braker.gtf <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span> <span class="p">;</span> <span class="k">done</span>
+</code></pre></div>  </div>
+
+  <p>Assemblies were merged with Stringtie to create a non-redundant set of transcripts, and then transcript abundance was estimated for each individual replicate.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>stringtie <span class="nt">--merge</span> <span class="nt">-o</span> stringtie.merged.gtf <span class="nt">-G</span> braker.gtf <span class="k">*</span>stringtie.gtf
+
+<span class="k">for </span>i <span class="k">in </span>genome.sample<span class="k">*</span>RNA.bam <span class="p">;</span> <span class="k">do </span>stringtie <span class="nt">-o</span> <span class="s2">"</span><span class="nv">$i</span><span class="s2">"</span>.stringtie.merged <span class="nt">-G</span> stringtie.merged.gtf
+</code></pre></div>  </div>
+
+  <p>Statistical analysis of the abundances was performed in Ballgown ().</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+</code></pre></div>  </div>
+
+</section>
+
+<section id="go-enrichment">
+  <h3>2l. GO Term Enrichment</h3>
+</section>
+
+<section id="wgd">
+  <h3>2m. Whole Genome Duplication</h3>
+  <p> Whole genome duplication (WGD) was inferred from Ks (synonymous substitution) plots from <a href="https://github.com/arzwa/wgd">wgd</a> (). The input is the CDS sequence fasta containing only primary transcripts. Self-synteny plots were visually inspected for any indication of 2-to-1 syntenic block ratios typical of WGD.</p>
+
+  <div class="language-shell highlighter-rouge"><div class="highlight"><pre class="highlight"><code>wgd dmd <span class="nt">--nostrictcds</span> <span class="nt">--ignorestop</span> Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta
+
+wgd ksd <span class="nt">--n_threads</span> 24 Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta.mcl Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta
+
+wgd syn <span class="nt">-f</span> gene <span class="nt">-a</span> ID <span class="nt">-ks</span> Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta.tsv Anthoceros_agrestis_Oxford_gene_annotations.gff Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta.mcl
+</code></pre></div>  </div>
+
+</section>
+
+<section id="results-and-discussion">
+  <h2>Results and Discussion</h2>
+</section>
+<p><!--Results-discussion end--></p>
+
+
+  </div><a class="u-url" href="/jekyll/update/2024/04/30/hornwort-genomes.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">PWS Notes</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">PWS Notes</li><li><a class="u-email" href="mailto:peter@peterwschafran.com">peter@peterwschafran.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://www.facebook.com/peter.schafran"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg> <span class="username">peter.schafran</span></a></li><li><a href="https://github.com/pschafran"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">pschafran</span></a></li><li><a href="https://instagram.com/peter_schafran"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">peter_schafran</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>I am an evolutionary biologist and systematist interested in non-model non-flowering plants, especially the order Isoetales (quillworts) and phylum Anthocerotophyta (hornworts). This blog documents notes and code that don’t fit into standard publications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

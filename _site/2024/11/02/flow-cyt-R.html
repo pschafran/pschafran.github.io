@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1"><!-- Begin Jekyll SEO tag v2.8.0 -->
+<title>Calculating Genome Sizes from Flow Cytometry Data In R | PWS Notes</title>
+<meta name="generator" content="Jekyll v3.9.5" />
+<meta property="og:title" content="Calculating Genome Sizes from Flow Cytometry Data In R" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="Last Updated: 2024-11-06 Raw Code" />
+<meta property="og:description" content="Last Updated: 2024-11-06 Raw Code" />
+<link rel="canonical" href="http://localhost:4000/2024/11/02/flow-cyt-R.html" />
+<meta property="og:url" content="http://localhost:4000/2024/11/02/flow-cyt-R.html" />
+<meta property="og:site_name" content="PWS Notes" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2024-11-02T10:00:00-04:00" />
+<meta name="twitter:card" content="summary" />
+<meta property="twitter:title" content="Calculating Genome Sizes from Flow Cytometry Data In R" />
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"BlogPosting","dateModified":"2024-11-02T10:00:00-04:00","datePublished":"2024-11-02T10:00:00-04:00","description":"Last Updated: 2024-11-06 Raw Code","headline":"Calculating Genome Sizes from Flow Cytometry Data In R","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/2024/11/02/flow-cyt-R.html"},"url":"http://localhost:4000/2024/11/02/flow-cyt-R.html"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/assets/main.css"><link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="PWS Notes" /></head>
+<body><header class="site-header" role="banner">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/">PWS Notes</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/about/">About</a><a class="page-link" href="/blog.html">Blog</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Calculating Genome Sizes from Flow Cytometry Data In R</h1>
+    <p class="post-meta">
+      <time class="dt-published" datetime="2024-11-02T10:00:00-04:00" itemprop="datePublished">Nov 2, 2024
+      </time></p>
+  </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <section>
+  <p>Last Updated: 2024-11-06</p>
+  <p><a href="https://github.com/pschafran/Notes/blob/master/FlowCytometry.R">Raw Code</a></p>
+</section>
+
+<section>
+  <h2>Intro</h2>
+  <p>Flow cytometry is an easy way to measure plant genome sizes for polyploid screening, ctyogeography, systematics, and preparing a new species for genome assembly. 
+It relies on chopping or grinding leaf tissue to extract whole nuclei, staining the DNA with a fluorescent dye (usually propidium iodide), measuring the fluorescence of each nucleus with a flow cytometer, and comparing the unknown sample to size standards (plant cultivar lines with known genome sizes). 
+Processing the data can require expensive proprietary software depending on the make and model of you flow cytometer. 
+However, if the data can be exported into the <a href="https://en.wikipedia.org/wiki/Flow_Cytometry_Standard">Flow Cytometry Standard</a> (.fcs) file formart you can calculate genome sizes in R.
+My code was adapted from <a href="https://www.polarmicrobes.org/analyzing-flow-cytometry-data-with-r/">https://www.polarmicrobes.org/analyzing-flow-cytometry-data-with-r/</a>.
+</p>
+
+  <h2>General Notes</h2>
+  <ul>
+        <li>As good practice, at the beginning of each experiment I recommend running at least three standards and calculating their linear model and r<sup>2</sup>.
+        The r<sup>2</sup> should be high (&gt;0.99). If not, get someone to check out your flow cytometer</li>
+        <li>The y-intercept should also be relatively close to 0, though it may not be exact (again, the numerical value in relative fluorescence units will vary a lot based on your detector sensitivity)$
+        This can affect your genome size measurements, which is why it's important to use a size standard that's as close to your sample as possible</li>
+        <li>I like to measure each sample against two standards and calculate the average, though the accepted practice is to report just the value based on the single nearest standard</li>
+</ul>
+
+  <h2>Dependencies</h2>
+  <p>Reading the .fcs files relies on the <a href="https://bioconductor.org/packages/release/bioc/html/flowCore.html">flowCore</a> package available through BioConductor. 
+Other common packages I use for manipulating and plotting the data are dplyr, ggplot2, and ggpubr.
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="s2">"flowCore"</span><span class="p">)</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"ggplot2"</span><span class="p">)</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"ggpubr"</span><span class="p">)</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="s2">"dplyr"</span><span class="p">)</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <h2>Working Environment</h2>
+  <p>I export my .fcs files to a new directory each day and set my R working directory there.
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">setwd</span><span class="p">(</span><span class="s2">"~/Projects/Isoetes/Flow Cytometry/20240604/"</span><span class="p">)</span><span class="w">
+</span></code></pre></div>  </div>
+  <p>Then I set the file name as a variable.
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">f.name</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="s1">'Inks_HH_4b_#2_+_radish.fcs'</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p>The .fcs file gets read and converted into a dataframe.
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fcm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.FCS</span><span class="p">(</span><span class="n">f.name</span><span class="p">)</span><span class="w">
+</span><span class="n">fcm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">((</span><span class="n">exprs</span><span class="p">(</span><span class="n">fcm</span><span class="p">)))</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <h2>Find the Peaks</h2>
+  <p>In order to locate the peaks used for the genome size calculation, I plot all of the data as a 2D-histogram of fluorescence height vs fluorescence area. 
+These are called YL1-H and YL1-A in the output from our Attune NxT, but may differ in your flow cytometer. 
+This plot usually allows you to separate the true nuclei data from noise generated by subcellular junk that also has some fluorescence. 
+If your nuclei points are too close to the noise, increasing the sensitivity of the detectors on the machine and remeasuring the sample may help.
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ggplot</span><span class="p">(</span><span class="n">fcm</span><span class="p">,</span><span class="w"> </span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="p">)</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">geom_bin2d</span><span class="p">(</span><span class="n">bins</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">scale_fill_continuous</span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"viridis"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">scale_x_continuous</span><span class="p">(</span><span class="n">breaks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scales</span><span class="o">::</span><span class="n">pretty_breaks</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="m">15</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">scale_y_continuous</span><span class="p">(</span><span class="n">breaks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">scales</span><span class="o">::</span><span class="n">pretty_breaks</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="m">15</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">xlab</span><span class="p">(</span><span class="s2">"YL1-A"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">ylab</span><span class="p">(</span><span class="s2">"YL1-H"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+  </span><span class="n">theme_bw</span><span class="p">()</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p><img src="/docs/assets/images/Flow_cyt_all_data.jpeg" alt="" /></p>
+
+  <p>This plot doesn’t look like much except a broad range of low-abundance data and high counts near 0, 0. 
+Note that the numbers on the axes are relative fluorescence units, and will vary depending on your machine and detector settings.
+</p>
+
+  <p>Adding log transformation to the color scale can help reveal where the data we want are located. 
+Replace the <code class="language-plaintext highlighter-rouge">scale_fill_continuous</code> line above with:
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scale_fill_continuous</span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"viridis"</span><span class="p">,</span><span class="w"> </span><span class="n">trans</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"log"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p><img src="/docs/assets/images/Flow_cyt_all_data_log.jpeg" alt="" /></p>
+
+  <p>Now we can start to see additional data centering approximately on the x = y line, which is where the true nuclei measurements should lie.
+</p>
+
+  <p>To home in on the nuclei, I set the bounds of X and Y axes to eliminate most of the noisy data, i.e. high number of small particles (near the plot origin) and rare large particles. 
+For this example, I’d start with these:
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pia.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">10000</span><span class="w"> </span><span class="c1"># YL1-A lower limit</span><span class="w">
+</span><span class="n">pia.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">300000</span><span class="w"> </span><span class="c1"># YL1-A upper limit</span><span class="w">
+</span><span class="n">pih.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">10000</span><span class="w"> </span><span class="c1"># YL1-H lower limit </span><span class="w">
+</span><span class="n">pih.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">300000</span><span class="w"> </span><span class="c1"># YL1-H upper limit</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p>Filter the dataframe with the code below to remove points outside the boundaries you set, then plot again.
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="p">[</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pia.ll</span><span class="o">|</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pia.ul</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pih.ll</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pih.ul</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NA</span><span class="w">
+</span><span class="n">fcm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">na.omit</span><span class="p">(</span><span class="n">fcm</span><span class="p">)</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p><img src="/docs/assets/images/Flow_cyt_reduced_data_1.jpeg" alt="" /></p>
+
+  <p>The two points representing our nuclei (one for the sample, one for the standard) are becoming more clear. 
+One is around YL1-A = 50000, the other at YL1-A = 145000. 
+Note that you may have additional smaller points from cells in your plants that underwent endoreduplication. 
+They should be easy to identify as they will be multiples of the majority nuclei size. 
+(Aside: I don’t know where the fainter line at x ≈1/3y comes from. Write to tell me if you do !) 
+</p>
+
+  <p>We can refine this figure a bit more by narrowing the bounds again. 
+Now it’s important to note that the points aren’t exactly at x = y, and the YH1-A and YH1-H limits might need to be set differently to capture the full distribution of the nuclei data. 
+When in doubt, wider is always better to make sure you aren’t throwing away useful information. 
+Also, if you over-filtered the first time and need to expand the bounds, you will need to regenerated the dataframe and read the data from the file again.
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pia.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">30000</span><span class="w"> </span><span class="c1"># YL1-A lower limit</span><span class="w">
+</span><span class="n">pia.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">200000</span><span class="w"> </span><span class="c1"># YL1-A upper limit</span><span class="w">
+</span><span class="n">pih.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">20000</span><span class="w"> </span><span class="c1"># YL1-H lower limit</span><span class="w">
+</span><span class="n">pih.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">200000</span><span class="w"> </span><span class="c1"># YL1-H upper limit</span><span class="w">
+
+</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="p">[</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pia.ll</span><span class="o">|</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pia.ul</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pih.ll</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pih.ul</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NA</span><span class="w">
+</span><span class="n">fcm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">na.omit</span><span class="p">(</span><span class="n">fcm</span><span class="p">)</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p><img src="/docs/assets/images/Flow_cyt_reduced_data_2.jpeg" alt="" /></p>
+
+  <p>Switching back to a non-transformed colorscale can also help identify the peaks now.
+</p>
+
+  <p><img src="/docs/assets/images/Flow_cyt_reduced_data_3.jpeg" alt="" /></p>
+
+  <p>Once we have a good idea of where the nuclei peaks are, we can visualize YL1-A and YL1-H as separate histograms the peaks should be obvious.
+</p>
+
+  <p><img src="/docs/assets/images/Flow_cyt_histogram_1.jpeg" alt="" /></p>
+
+  <h2>Calculate Genome Size</h2>
+  <p>The genome size is calculated from the linear relationship of relative fluorescence between the sample and standard with the equation:
+</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sample 2C DNA content = (Sample G1 peak median/Standard G1 peak median) * Standard 2C DNA content
+</code></pre></div>  </div>
+  <p>Based on the peaks in the histograms, I set the range that captures each and calculate the median:
+</p>
+
+  <div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">pia.standard.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">40000</span><span class="w">  </span><span class="c1"># YL1-A lower limit of peak</span><span class="w">
+</span><span class="n">pia.standard.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">60000</span><span class="w"> </span><span class="c1"># YL1-A upper limit of peak</span><span class="w">
+</span><span class="n">pih.standard.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">40000</span><span class="w">  </span><span class="c1"># YL1-H lower limit of peak (if unsure, use same as pia.ll)</span><span class="w">
+</span><span class="n">pih.standard.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">60000</span><span class="w">  </span><span class="c1"># YL1-H upper limit of peak (if unsure, use same as pia.ul)</span><span class="w">
+</span><span class="n">median</span><span class="p">(</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="p">[</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pia.standard.ll</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pia.standard.ul</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pih.standard.ll</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pih.standard.ul</span><span class="p">])</span><span class="w">
+
+</span><span class="n">pia.sample.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">140000</span><span class="w">  </span><span class="c1"># YL1-A lower limit of peak</span><span class="w">
+</span><span class="n">pia.sample.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">160000</span><span class="w"> </span><span class="c1"># YL1-A upper limit of peak</span><span class="w">
+</span><span class="n">pih.sample.ll</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">120000</span><span class="w">  </span><span class="c1"># YL1-H lower limit of peak (if unsure, use same as pia.ll)</span><span class="w">
+</span><span class="n">pih.sample.ul</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">150000</span><span class="w">  </span><span class="c1"># YL1-H upper limit of peak (if unsure, use same as pia.ul)</span><span class="w">
+</span><span class="n">median</span><span class="p">(</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="p">[</span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pia.sample.ll</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-A`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pia.sample.ul</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">pih.sample.ll</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">fcm</span><span class="o">$</span><span class="n">`YL1-H`</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="n">pih.sample.ul</span><span class="p">])</span><span class="w">
+</span></code></pre></div>  </div>
+
+  <p>Take those median values that are output, plug them into the equation along with your standard’s 2C value, and you’re done! I usually do the calculations and store the data in an Excel spreadsheet.
+</p>
+
+  <p>To count the number of events (nuclei) in each peak, use the same bounds set for measuring their fluorescence and run:
+</p>
+
+  <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>length(fcm$`YL1-A`[fcm$`YL1-A` &gt;= pia.standard.ll &amp; fcm$`YL1-A` &lt;= pia.standard.ul &amp; fcm$`YL1-H` &gt;= pih.standard.ll &amp; fcm$`YL1-H` &lt;= pih.standard.ul])
+length(fcm$`YL1-A`[fcm$`YL1-A` &gt;= pia.sample.ll &amp; fcm$`YL1-A` &lt;= pia.sample.ul &amp; fcm$`YL1-H` &gt;= pih.sample.ll &amp; fcm$`YL1-H` &lt;= pih.sample.ul])
+</code></pre></div>  </div>
+
+</section>
+
+  </div><a class="u-url" href="/2024/11/02/flow-cyt-R.html" hidden></a>
+</article>
+
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/"></data>
+
+  <div class="wrapper">
+
+    <h2 class="footer-heading">PWS Notes</h2>
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col footer-col-1">
+        <ul class="contact-list">
+          <li class="p-name">PWS Notes</li><li><a class="u-email" href="mailto:peter@peterwschafran.com">peter@peterwschafran.com</a></li></ul>
+      </div>
+
+      <div class="footer-col footer-col-2"><ul class="social-media-list"><li><a href="https://www.facebook.com/peter.schafran"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#facebook"></use></svg> <span class="username">peter.schafran</span></a></li><li><a href="https://github.com/pschafran"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#github"></use></svg> <span class="username">pschafran</span></a></li><li><a href="https://instagram.com/peter_schafran"><svg class="svg-icon"><use xlink:href="/assets/minima-social-icons.svg#instagram"></use></svg> <span class="username">peter_schafran</span></a></li></ul>
+</div>
+
+      <div class="footer-col footer-col-3">
+        <p>I am an evolutionary biologist and systematist interested in non-model non-flowering plants, especially the order Isoetales (quillworts) and phylum Anthocerotophyta (hornworts). This blog documents notes and code that don’t fit into standard publications.</p>
+      </div>
+    </div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>

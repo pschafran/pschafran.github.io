@@ -6,7 +6,7 @@ categories: jekyll update
 ---
 <section>
 <p>Intial Post Date: 2024-04-30</p>
-<p>qLast Updated: 2024-06-27</p>
+<p>Last Updated: 2024-06-27</p>
 </section>
 
 <section id="toc">
@@ -58,18 +58,18 @@ categories: jekyll update
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/renameGTF_Phytozome.py">renameGTF_Phytozome.py</a>| Convert gene and transcript ids in a GTF file using a conversion table | Custom |
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/summaryStats.R">summaryStats.R</a>| Generate summary stats for a list of numbers piped to script through STDIN | Custom |
 |<a href="https://github.com/pschafran/hornwort-genomes-paper/blob/main/trf2gff.py">trf2gff.py</a>| Convert tandemrepeatsfinder output to GFF format| Custom | 
-| flye 2.8 | Long-read assembly |   |
-| Pilon 1.24 | Draft assembly polishing | |
-| TGS-Gapcloser 1.1.1 | Filling gaps in scaffolded assembly |  |
-| juicer | Hi-C analysis  |   |
-| Juicebox Assembly Tools | Hi-C visualization |  |
-| hicexplorer 3.7.2 | |
-| pyGenomeTracks 3.8 | Genome visualization |  |
-| bwa 0.7.17-r1188 | Short-read mapping |          |
-| minimap2 2.17-r941 | Long-read mapping |          |
-| hisat2 2.2.1 f| RNA read mapping |          |
-| fastp 0.20.0 | Short-read adapter/low quality base trimming |      |
-| porechop 0.2.4 | ONT read adapter trimming |  |
+| flye 2.8 | Long-read assembly | <a href="https://doi.org/10.1038/s41587-019-0072-8">Kolmogorov et al. 2019</a>  |
+| Pilon 1.24 | Draft assembly polishing | <a href="http://www.plosone.org/article/info%3Adoi%2F10.1371%2Fjournal.pone.0112963">Walker et al. 2014</a> |
+| TGS-Gapcloser 1.1.1 | Filling gaps in scaffolded assembly | <a href="https://doi.org/10.1093/gigascience/giaa094">Xu et al. 2020</a> |
+| juicer | Hi-C analysis  | <a href="https://www.cell.com/fulltext/S2405-4712(16)30219-8">Durand et al. 2016</a>  |
+| Juicebox Assembly Tools | Hi-C visualization | <a href="https://github.com/aidenlab/Juicebox">Aiden Lab</a> |
+| hicexplorer 3.7.2 | Hi-C visualization and analysis | <a href="https://doi.org/10.1038/s41467-017-02525-w">Ramirez et al. 2018</a> |
+| pyGenomeTracks 3.8 | Genome visualization | <a href="https://academic.oup.com/bioinformatics/article/37/3/422/5879987">Lopez-Delisle et al. 2021</a>  |
+| bwa 0.7.17-r1188 | Short-read mapping | <a href="http://arxiv.org/abs/1303.3997">Li 2013</a> |
+| minimap2 2.17-r941 | Long-read mapping | <a href="https://academic.oup.com/bioinformatics/article/34/18/3094/4994778">Li 2018</a>  |
+| hisat2 2.2.1 | RNA read mapping | <a href="https://www.nature.com/articles/s41587-019-0201-4">Kim et al. 2019</a>  |
+| fastp 0.20.0 | Short-read adapter/low quality base trimming | <a href="https://academic.oup.com/bioinformatics/article/34/17/i884/5093234">Chen et al. 2018</a>  |
+| porechop 0.2.4 | ONT read adapter trimming | <a href="https://github.com/rrwick/Porechop">Wick 2018</a> |
 | EDTA 2.0.1 | Repeat annotation and analysis |  |
 | Tandem Repeats Finder 4.09.1
 | BRAKER 2.1.5 | Gene prediction |   |
@@ -651,8 +651,7 @@ for i in genome.sample*RNA.bam ; do stringtie -o "$i".stringtie.merged -G string
 <p>Statistical analysis of the abundances was performed in Ballgown ().</p>
 
 ```shell
-hisat2_extract_splice_sites.py braker.gtf > ss.txt
-hisat2_extract_exons_BRAKER.py > exon.txt
+
 ```
 
 

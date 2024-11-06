@@ -4,15 +4,16 @@ title: About
 permalink: /about/
 ---
 
-This is the base Jekyll theme. You can find out more info about customizing your Jekyll theme, as well as basic Jekyll usage documentation at [jekyllrb.com](https://jekyllrb.com/)
+<p>I am an evolutionary biologist and systematist interested in non-model non-flowering plants, especially the order Isoetales (quillworts) and phylum Anthocerotophyta (hornworts). 
+This blog documents notes and code that don't fit into standard publications. 
+</p>
 
-You can find the source code for Minima at GitHub:
-[jekyll][jekyll-organization] /
-[minima](https://github.com/jekyll/minima)
-
-You can find the source code for Jekyll at GitHub:
-[jekyll][jekyll-organization] /
-[jekyll](https://github.com/jekyll/jekyll)
-
-
-[jekyll-organization]: https://github.com/jekyll
+<p>
+Find me other places:<br>
+<a href="http://www.peterwschafran.com">peterwschafran.com</a><br>
+<a href="https://www.instagram.com/peter_schafran/">Instagram</a><br>
+<a href="https://github.com/pschafran">GitHub</a><br>
+<a href="https://www.inaturalist.org/people/720846">iNaturalist</a><br>
+<a href="https://bitbucket.org/peter_schafran/">BitBucket</a><br>
+<a href="https://www.facebook.com/peter.schafran/">Facebook</a>
+</p>
