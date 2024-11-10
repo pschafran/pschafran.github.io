@@ -675,6 +675,241 @@ wgd syn -f gene -a ID -ks Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fas
  
 </section>
 
+<section  id="sex-chromosome-mapping">
+<h3>2n. Sex Chromosome Mapping</h3>
+<p>Sex chromosomes were inferred by mapping short-read data from 5-6 individuals of each species to the respective reference genome. 
+Data were first filtered to remove organellar reads (which represented up to 50% of raw data) and bacterial contaminants if present, remove PCR duplicates, and then randomly sampled to an equal amount of data (in Mbp). 
+Reads were mapped to the genome and median depth was calculated in each 100 kbp window across the genome. 
+For each window, the depth for each individual was subracted from the control (data from the individual used to assemble the genome).  </p>
+
+<p>Map reads to the organelles, remove PCR duplicates, then keep reads that do not map and save them as FASTQ files. Repeat for each individual.</p>
+
+```shell
+cat Species_plastome.fasta Species_chondrome.fasta > Species_organelles.fasta
+bwa index Species_organelles.fasta
+bwa mem -t 24 Species_organelles.fasta Species_individualA_R1.fq.gz Species_individualA_R2.fq.gz | samblaster | samtools view -f 4 | samtools sort -n | samtools fastq -1 Species_individualA_organellesFiltered_R1.fq -2 Species_individualA_organellesFiltered_R2.fq
+```
+
+<p>Subset the reads of the control individual to match each other individual (since the control has the most data to start). 
+First find the amount of data for each. I'm using the assembly-stats script but you can use anything that reports the total amount of data and number of reads.</p> 
+
+```shell
+assembly-stats -t *organellesFiltered*.fq
+```
+
+<p>Use <a href="https://github.com/lh3/seqtk">seqtk</a> to randomly sample from the read files. 
+Seqtk operates on number of reads, but having the same total amount of data is more important for depth-based analyses. 
+You can start sampling using the number of reads, but it may need to be adjusted to get the amount of data more even. 
+If you know the read length distribution for each dataset you can use it to calculate the number of reads to reach a certain amount of data. 
+Repeat for each sample being compared to the control.</p>
+
+```shell
+seqtk sample -s100 Species_controlIndividual_organellesFiltered_R1.fq 14613074 > Species_controlIndividual_subset_to_individualA_R1.fq
+seqtk sample -s100 Species_controlIndividual_organellesFiltered_R2.fq 14613074 > Species_controlIndividual_subset_to_individualA_R2.fq
+```
+
+<p>Map reads from each individual, including the control, to the reference genome.</p>
+
+```shell
+bwa index Species_genome.fasta
+bwa mem -t 24 Species_genome.fasta Species_individualA_R1.fq Species_individualA_R2.fq | samtools sort -o Species_individualA.bam
+```
+
+<p>Get the read depth across the genome for each individual.</p>
+
+```shell
+samtools depth Species_individualA.bam > Species_individualA.depth.txt
+```
+
+<p>Convert the `samtools depth` output into BED format.</p>
+
+```shell
+awk -F"\t" '{print $1"\t"$2"\t"$2+1"\t"$3"\t"$3}' Species_individualA.depth.txt > Species_individualA.depth.bed
+```
+
+<p>Make a reference BED file for the genome. Used for making windows for calculations.</p>
+
+```shell
+samtools faidx Species_genome.fasta
+awk -F"\t" '{print $1"\t1\t"$2}' Species_genome.fasta.fai > Species_genome.bed
+```
+<p>Calculate the median depth value in each 100kbp window. 
+Repeat for each individual and each subset of the control subsampled to the same amount of data as each other individual.</p>
+
+```shell
+bedtools makewindows -b Species_genome.bed -w 100000 | sortBed -i - | bedmap --echo --median - Species_individualA.depth.bed | sed 's/|/\t/g' > Species_individualA.depth.100kb.bed
+```
+
+<p>The next steps are done in R.
+A few packages that are required are `ggplot2`, `ggpubr`, `dplyr`, and `superb`.
+With those installed, read in your data files. I've grouped these by the separate individuals vs. control individual.
+This example uses <i>Phymatoceros phymatodes</i> from Fig. 4.</p>
+
+```R
+library(ggplot2)
+library(ggpubr)
+library(superb)
+library(dplyr)
+
+# read files and set up dataframes
+Onedepth <- read.delim("PhymatoCJR5469_1.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+Twodepth <- read.delim("PhymatoCJR5469_2.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+Threedepth <- read.delim("PhymatoCJR5469_3.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+Fivedepth <- read.delim("PhymatoCJR5469_5.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+Sixdepth <- read.delim("PhymatoCJR5469_6.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+
+HsubsetOnedepth <- read.delim("Phymatoceros_phymatodes_H40.subset1.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+HsubsetTwodepth <- read.delim("Phymatoceros_phymatodes_H40.subset2.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+HsubsetThreedepth <- read.delim("Phymatoceros_phymatodes_H40.subset3.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+HsubsetFivedepth <- read.delim("Phymatoceros_phymatodes_H40.subset5.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+HsubsetSixdepth <- read.delim("Phymatoceros_phymatodes_H40.subset6.genomeMapped.bam.depth.100kb.bed", header = F, sep = "\t")
+
+colnames(Onedepth) <- c("SampleChrom","SampleBase", "StopBase", "SampleDepth")
+colnames(Twodepth) <- c("SampleChrom","SampleBase", "StopBase", "SampleDepth")
+colnames(Threedepth) <- c("SampleChrom","SampleBase", "StopBase", "SampleDepth")
+colnames(Fivedepth) <- c("SampleChrom","SampleBase", "StopBase", "SampleDepth")
+colnames(Sixdepth) <- c("SampleChrom","SampleBase", "StopBase",  "SampleDepth")
+
+colnames(HsubsetOnedepth) <- c("RefChrom","RefBase", "RefStop", "RefDepth")
+colnames(HsubsetTwodepth) <- c("RefChrom","RefBase", "RefStop", "RefDepth")
+colnames(HsubsetThreedepth) <- c("RefChrom","RefBase", "RefStop", "RefDepth")
+colnames(HsubsetFivedepth) <- c("RefChrom","RefBase", "RefStop", "RefDepth")
+colnames(HsubsetSixdepth) <- c("RefChrom","RefBase",  "RefStop", "RefDepth")
+
+Onedepth$SampleDepth <- as.numeric(Onedepth$SampleDepth)
+Twodepth$SampleDepth <- as.numeric(Twodepth$SampleDepth)
+Threedepth$SampleDepth <- as.numeric(Threedepth$SampleDepth)
+Fivedepth$SampleDepth <- as.numeric(Fivedepth$SampleDepth)
+Sixdepth$SampleDepth <- as.numeric(Sixdepth$SampleDepth)
+
+HsubsetOnedepth$RefDepth <- as.numeric(HsubsetOnedepth$RefDepth)
+HsubsetTwodepth$RefDepth <- as.numeric(HsubsetTwodepth$RefDepth)
+HsubsetThreedepth$RefDepth <- as.numeric(HsubsetThreedepth$RefDepth)
+HsubsetFivedepth$RefDepth <- as.numeric(HsubsetFivedepth$RefDepth)
+HsubsetSixdepth$RefDepth <- as.numeric(HsubsetSixdepth$RefDepth)
+```
+
+<p>Now combine the respective sample individual and its control.</p>
+
+```R
+Onemerged <- cbind(Onedepth, HsubsetOnedepth)
+Twomerged <- cbind(Twodepth, HsubsetTwodepth)
+Threemerged <- cbind(Threedepth, HsubsetThreedepth)
+Fivemerged <- cbind(Fivedepth, HsubsetFivedepth)
+Sixmerged <- cbind(Sixdepth, HsubsetSixdepth)
+```
+
+<p>Remove entries where the control is missing data, has no coverage, or has much higher coverage than expected under a normal distribution (>100X).</p>
+
+```R
+Onemerged_rmNA <- Onemerged[Onemerged$RefDepth != "NaN", ]
+Twomerged_rmNA <- Twomerged[Twomerged$RefDepth != "NaN", ]
+Threemerged_rmNA <- Threemerged[Threemerged$RefDepth != "NaN", ]
+Fivemerged_rmNA <- Fivemerged[Fivemerged$RefDepth != "NaN", ]
+Sixmerged_rmNA <- Sixmerged[Sixmerged$RefDepth != "NaN", ]
+
+Onemerged_rmmissing <- Onemerged_rmNA[Onemerged_rmNA$RefDepth != 0.0, ]
+Twomerged_rmmissing <- Twomerged_rmNA[Twomerged_rmNA$RefDepth != 0.0, ]
+Threemerged_rmmissing <- Threemerged_rmNA[Threemerged_rmNA$RefDepth != 0.0, ]
+Fivemerged_rmmissing <- Fivemerged_rmNA[Fivemerged_rmNA$RefDepth != 0.0, ]
+Sixmerged_rmmissing <- Sixmerged_rmNA[Sixmerged_rmNA$RefDepth != 0.0, ]
+
+Onemerged_rmOutliers <- Onemerged_rmmissing[which((Onemerged_rmmissing$SampleDepth < 100 ) & (Onemerged_rmmissing$RefDepth < 100)), ]
+Twomerged_rmOutliers <- Twomerged_rmmissing[which((Twomerged_rmmissing$SampleDepth < 100 ) & (Twomerged_rmmissing$RefDepth < 100)), ]
+Threemerged_rmOutliers <- Threemerged_rmmissing[which((Threemerged_rmmissing$SampleDepth < 100 ) & (Threemerged_rmmissing$RefDepth < 100)), ]
+Fivemerged_rmOutliers <- Fivemerged_rmmissing[which((Fivemerged_rmmissing$SampleDepth < 100 ) & (Fivemerged_rmmissing$RefDepth < 100)), ]
+Sixmerged_rmOutliers <- Sixmerged_rmmissing[which((Sixmerged_rmmissing$SampleDepth < 100 ) & (Sixmerged_rmmissing$RefDepth < 100)), ]
+```
+
+<p>Calulate the net depth in each window by subtracting the control from the sample.</p>
+
+```R
+OnenetDepth <- data.frame(Chrom = Onemerged_rmOutliers$SampleChrom, Base = Onemerged_rmOutliers$SampleBase, NetDepth = (Onemerged_rmOutliers$SampleDepth - Onemerged_rmOutliers$RefDepth))
+TwonetDepth <- data.frame(Chrom = Twomerged_rmOutliers$SampleChrom, Base = Twomerged_rmOutliers$SampleBase, NetDepth = (Twomerged_rmOutliers$SampleDepth - Twomerged_rmOutliers$RefDepth))
+ThreenetDepth <- data.frame(Chrom = Threemerged_rmOutliers$SampleChrom, Base = Threemerged_rmOutliers$SampleBase, NetDepth = (Threemerged_rmOutliers$SampleDepth - Threemerged_rmOutliers$RefDepth))
+FivenetDepth <- data.frame(Chrom = Fivemerged_rmOutliers$SampleChrom, Base = Fivemerged_rmOutliers$SampleBase, NetDepth = (Fivemerged_rmOutliers$SampleDepth - Fivemerged_rmOutliers$RefDepth))
+SixnetDepth <- data.frame(Chrom = Sixmerged_rmOutliers$SampleChrom, Base = Sixmerged_rmOutliers$SampleBase, NetDepth = (Sixmerged_rmOutliers$SampleDepth - Sixmerged_rmOutliers$RefDepth))
+```
+
+<p>Extract just the data for the chromosome-scale scaffolds (ignore the unscaffolded contigs). 
+Add a numerical identifier and rename the columns.</p>
+
+```R
+OnenetDepthScaff <- subset(OnenetDepth, OnenetDepth$Chrom %in% c("Phphy.S1","Phphy.S2","Phphy.S3","Phphy.S4","Phphy.S5"))
+TwonetDepthScaff <- subset(TwonetDepth, TwonetDepth$Chrom %in% c("Phphy.S1","Phphy.S2","Phphy.S3","Phphy.S4","Phphy.S5"))
+ThreenetDepthScaff <- subset(ThreenetDepth, ThreenetDepth$Chrom %in% c("Phphy.S1","Phphy.S2","Phphy.S3","Phphy.S4","Phphy.S5"))
+FivenetDepthScaff <- subset(FivenetDepth, FivenetDepth$Chrom %in% c("Phphy.S1","Phphy.S2","Phphy.S3","Phphy.S4","Phphy.S5"))
+SixnetDepthScaff <- subset(SixnetDepth, SixnetDepth$Chrom %in% c("Phphy.S1","Phphy.S2","Phphy.S3","Phphy.S4","Phphy.S5"))
+
+OnenetDepthFinal <- cbind("1", OnenetDepthScaff)
+TwonetDepthFinal <- cbind("2", TwonetDepthScaff)
+ThreenetDepthFinal <- cbind("3", ThreenetDepthScaff)
+FivenetDepthFinal <- cbind("5", FivenetDepthScaff)
+SixnetDepthFinal <- cbind("6", SixnetDepthScaff)
+
+colnames(OnenetDepthFinal) <- c("Sample", "Chrom", "Base", "NormDepth")
+colnames(TwonetDepthFinal) <- c("Sample", "Chrom", "Base", "NormDepth")
+colnames(ThreenetDepthFinal) <- c("Sample", "Chrom", "Base", "NormDepth")
+colnames(FivenetDepthFinal) <- c("Sample", "Chrom", "Base", "NormDepth")
+colnames(SixnetDepthFinal) <- c("Sample", "Chrom", "Base", "NormDepth")
+```
+
+<p>Combine individual dataframes together.</p>
+
+```R
+combined <- bind_rows(OnenetDepthFinal, ThreenetDepthFinal, TwonetDepthFinal, FivenetDepthFinal, SixnetDepthFinal)
+combined$Sample <- factor(combined$Sample, levels = c("1", "3", "2", "5", "6"))
+```
+
+<p>Plot the net depth using boxplots for each chromosome and individual.</p>
+
+```R
+ggplot(data = combined, aes(x = Chrom, y = NormDepth, fill = Sample)) +
+  geom_boxplot(outliers = F, outlier.alpha = 0.1, outlier.shape = ".") +
+  #ylim(0.35, 0.65) +
+  xlab("") +
+  scale_fill_manual(values=c("#648FFF", "#AFC5FF", "#b95657", "#8c383a", "#4e0d14")) +
+  ylab("Net Read Depth") +
+  theme_bw()
+```
+
+<p>You should have something that looks like the Fig. 4c left panel.</p>
+
+<img src="/docs/assets/images/Hornwortgenomes_fig4c_left.png" alt="">
+
+<p>Now extract the data just for the sex chromosome so we can plot the net depth along the chromosome for each individual.</p> 
+
+```R
+One.S5.netDepth <- subset(OnenetDepthFinal, OnenetDepthFinal$Chrom %in% "Phphy.S5")
+Two.S5.netDepth <- subset(TwonetDepthFinal, TwonetDepthFinal$Chrom %in% "Phphy.S5")
+Three.S5.netDepth <- subset(ThreenetDepthFinal, ThreenetDepthFinal$Chrom %in% "Phphy.S5")
+Five.S5.netDepth <- subset(FivenetDepthFinal, FivenetDepthFinal$Chrom %in% "Phphy.S5")
+Six.S5.netDepth <- subset(SixnetDepthFinal, SixnetDepthFinal$Chrom %in% "Phphy.S5")
+```
+
+<p>Combine into a single dataframe.</p>
+
+```R
+combinedS5malefemale <- bind_rows(One.S5.netDepth, Three.S5.netDepth,Two.S5.netDepth, Five.S5.netDepth, Six.S5.netDepth )
+```
+
+<p>Plot the net depth using a dotplot with LOESS smoothed lines.</p>
+
+```R
+ggplot(data = combinedS5malefemale, aes(x = Base, y = NormDepth, color = Sample)) +
+  geom_point(alpha = 0.8, show.legend = F) +
+  geom_line(show.legend = F, stat = "smooth", span = 0.5) +
+  ylab("Net Read Depth") +
+  scale_color_manual(values=c("#648FFF", "#b95657", "#AFC5FF", "#8c383a", "#4e0d14")) +
+  theme_bw()
+```
+
+<p>The result is the Fig 4c. right panel.</p>
+
+<img src="/docs/assets/images/Hornwortgenomes_fig4c_right.png" alt="">
+
+</section>
+
 <section id="results-and-discussion">
 <h2>Results and Discussion</h2>
 </section> <!--Results-discussion end-->
