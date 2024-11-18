@@ -907,6 +907,106 @@ ggplot(data = combinedS5malefemale, aes(x = Base, y = NormDepth, color = Sample)
 <p>The result is the Fig 4c. right panel.</p>
 
 <img src="/docs/assets/images/Hornwortgenomes_fig4c_right.png" alt="">
+</section>
+
+<section id="pangenome">
+<h3>Pangenome</h3>
+<p>The hornwort phylum-level pangenome classified gene orthogroups based on presence/absence across the phylogeny into traditional pangenome categories of "core" (present in every genome), "peripheral" (present in all but one genome), "dispensable" (present in two to nine genomes), and "private" (present in only one genome). 
+Results were determined from the OrthoFinder analysis of hornwort genomes, with <i>Anthoceros agrestis</i> Bonn and <i>A. angustus</i> removed due to their different gene prediction methods. 
+</p>
+
+<p>The OrthoFinder `Orthogroups.GeneCount.tsv` table was first stripped of the 'Total' column, then converted into a presence/absence table with values of 1/0, respectively.
+</p>
+
+```shell
+cut -f 1-12 Orthogroups.GeneCount.tsv > Orthogroups.GeneCount.noTotal.tsv
+```
+
+<p>In Python:</p>
+```python
+with open("Orthogroups.GeneCount.noTotal.tsv", "r") as infile, open("Orthogroups.PresenceAbsence.tsv", "w") as outfile:
+	linecount = 0
+	for line in infile:
+		linecount +=1
+		if linecount > 1:
+			splitline = line.strip("\n").split("\t")
+			newline = [splitline[0]]
+			for item in splitline[1:]:
+				if int(item) > 0:
+					newline.append("1")
+				else:
+					newline.append("0")
+			outfile.write("%s\n" % "\t".join(newline))
+
+		else:
+			outfile.write(line)
+```
+
+<p>Separate orthogroups into categories based on the presence/absence table in Python:
+</p>
+
+```python
+with open("Orthogroups.PresenceAbsence.tsv", "r") as infile, \
+open("Orthogroups.GeneCount.noTotal.tsv","r") as genecountfile, \
+open("Orthogroups.Core.tsv", "w") as coreOutfile, \
+open("Orthogroups.Peripheral.tsv","w") as periOutfile, \
+open("Orthogroups.Dispensable.tsv","w") as dispOutfile, \
+open("Orthogroups.Private.tsv","w") as privOutfile:
+	# make the dictionary of gene counts to reference later
+	genecountDict = {}
+	for line in genecountfile:
+		key = line.split("\t")[0]
+		genecountDict[key] = line
+	
+	# parse the presence/absence file and sort orthogroups into categories
+	linecount = 0
+	for line in infile:
+		linecount += 1
+		if linecount > 1:
+			splitline = line.strip("\n").split("\t")
+			og = splitline[0]
+			numbers = [ int(x) for x in splitline[1:] ]
+			if sum(numbers) == 11:
+				coreOutfile.write(genecountDict[og])
+			elif sum(numbers) == 10:
+				periOutfile.write(genecountDict[og])
+			elif sum(numbers) == 1:
+				privOutfile.write(genecountDict[og])
+			else:
+				dispOutfile.write(genecountDict[og])
+		else:
+			coreOutfile.write(line)
+			periOutfile.write(line)
+			dispOutfile.write(line)
+			privOutfile.write(line)
+```
+
+<p>Plotting data was done in R. First, the UpSet plot:</p>
+
+```R
+library(UpSetR)
+
+paDF <- read.delim("Orthogroups.PresenceAbsence.tsv", header = T, sep = "\t")
+colnames(paDF) <- c("Orthogroup","AnagrOXF", "Anfus", "Anpun", "Ledus", "Mefla", "Noorb", "Papea", "Phcar", "Phsp", "Phchi", "Phphy")
+upset(paDF, nsets = 14, nintersects = 50, order.by = "freq", keep.order = T, sets = rev(c("Ledus", "AnagrOXF", "Anfus", "Anpun", "Noorb", "Papea", "Phcar", "Phsp", "Mefla", "Phchi", "Phphy")))
+upset(paDF, nsets = 14, nintersects = 12, order.by = "degree", keep.order = T, sets = rev(c("Ledus", "AnagrOXF", "Anfus", "Anpun", "Noorb", "Papea", "Phcar", "Phsp", "Mefla", "Phchi", "Phphy")))
+```
+
+<img src="" alt="UpSet plot ordered by frequency">
+<img src="" alt="UpSet plot ordered by degree">
+
+
+<p>To make the bar charts of gene counts with in each category in, read in the categorized files:
+</p>
+
+```R
+coreDF <- read.delim("Orthogroups.Core.tsv", header = T, sep ="\t")
+periDF <- read.delim("Orthogroups.Peripheral.tsv", header = T, sep ="\t")
+dispDF <- read.delim("Orthogroups.Dispensable.tsv", header = T, sep ="\t")
+privDF <- read.delim("Orthogroups.Private.tsv", header = T, sep ="\t")
+```
+
+
 
 <p>Pairwise Wilcoxon rank sum tests can be used to test the significance of the difference in depth between sex chromosome and autosomes, with Bonferroni correction for multiple comparisons.</p>
 
@@ -990,8 +1090,5 @@ P value adjustment method: bonferroni
 
 </section>
 
-<section id="results-and-discussion">
-<h2>Results and Discussion</h2>
-</section> <!--Results-discussion end-->
 
 
