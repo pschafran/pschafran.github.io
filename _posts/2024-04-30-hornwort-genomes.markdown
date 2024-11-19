@@ -907,6 +907,86 @@ ggplot(data = combinedS5malefemale, aes(x = Base, y = NormDepth, color = Sample)
 <p>The result is the Fig 4c. right panel.</p>
 
 <img src="/docs/assets/images/Hornwortgenomes_fig4c_right.png" alt="">
+
+<p>Pairwise Wilcoxon rank sum tests can be used to test the significance of the difference in depth between sex chromosome and autosomes, with Bonferroni correction for multiple comparisons.</p>
+
+```R
+pairwise.wilcox.test(OnenetDepthFinal$NormDepth, OnenetDepthFinal$Chrom, p.adjust.method = "bonf")
+pairwise.wilcox.test(TwonetDepthFinal$NormDepth, TwonetDepthFinal$Chrom, p.adjust.method = "bonf")
+pairwise.wilcox.test(ThreenetDepthFinal$NormDepth, ThreenetDepthFinal$Chrom, p.adjust.method = "bonf")
+pairwise.wilcox.test(FivenetDepthFinal$NormDepth, FivenetDepthFinal$Chrom, p.adjust.method = "bonf")
+pairwise.wilcox.test(SixnetDepthFinal$NormDepth, SixnetDepthFinal$Chrom, p.adjust.method = "bonf")
+```
+
+<p>Output:</p>
+
+```R
+	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  OnenetDepthFinal$NormDepth and OnenetDepthFinal$Chrom 
+
+         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
+Phphy.S2 0.0104   -        -        -       
+Phphy.S3 1.0000   1.0000   -        -       
+Phphy.S4 0.0013   1.0000   0.2558   -       
+Phphy.S5 < 2e-16  3.2e-15  < 2e-16  2.5e-13 
+
+P value adjustment method: bonferroni 
+
+
+	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  TwonetDepthFinal$NormDepth and TwonetDepthFinal$Chrom 
+
+         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
+Phphy.S2 0.00021  -        -        -       
+Phphy.S3 0.14290  1.00000  -        -       
+Phphy.S4 0.00013  1.00000  0.68484  -       
+Phphy.S5 < 2e-16  < 2e-16  < 2e-16  < 2e-16 
+
+P value adjustment method: bonferroni 
+
+
+	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  ThreenetDepthFinal$NormDepth and ThreenetDepthFinal$Chrom 
+
+         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
+Phphy.S2 0.12     -        -        -       
+Phphy.S3 1.00     1.00     -        -       
+Phphy.S4 1.00     1.00     1.00     -       
+Phphy.S5 7.6e-15  4.9e-14  3.2e-14  1.4e-13 
+
+P value adjustment method: bonferroni 
+
+
+	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  FivenetDepthFinal$NormDepth and FivenetDepthFinal$Chrom 
+
+         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
+Phphy.S2 0.00119  -        -        -       
+Phphy.S3 0.15792  1.00000  -        -       
+Phphy.S4 0.00077  1.00000  1.00000  -       
+Phphy.S5 < 2e-16  < 2e-16  < 2e-16  < 2e-16 
+
+P value adjustment method: bonferroni 
+
+
+	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
+
+data:  SixnetDepthFinal$NormDepth and SixnetDepthFinal$Chrom 
+
+         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
+Phphy.S2 0.00017  -        -        -       
+Phphy.S3 0.00560  1.00000  -        -       
+Phphy.S4 0.00031  1.00000  1.00000  -       
+Phphy.S5 < 2e-16  < 2e-16  < 2e-16  < 2e-16 
+
+P value adjustment method: bonferroni 
+```
+
+<p>We observe significantly decreased coverage in just one chromosome, Phphy.S5, as expected if this is the sex chromosome.</p>
 </section>
 
 <section id="pangenome">
@@ -992,8 +1072,8 @@ upset(paDF, nsets = 14, nintersects = 50, order.by = "freq", keep.order = T, set
 upset(paDF, nsets = 14, nintersects = 12, order.by = "degree", keep.order = T, sets = rev(c("Ledus", "AnagrOXF", "Anfus", "Anpun", "Noorb", "Papea", "Phcar", "Phsp", "Mefla", "Phchi", "Phphy")))
 ```
 
-<img src="" alt="UpSet plot ordered by frequency">
-<img src="" alt="UpSet plot ordered by degree">
+<img src="/docs/assets/images/Hornwortgenomes_fig5b.png" alt="UpSet plot ordered by frequency">
+<img src="/docs/assets/images/Hornwortgenomes_fig5a.png" alt="UpSet plot ordered by degree">
 
 
 <p>To make the bar charts of gene counts with in each category in, read in the categorized files:
@@ -1006,87 +1086,23 @@ dispDF <- read.delim("Orthogroups.Dispensable.tsv", header = T, sep ="\t")
 privDF <- read.delim("Orthogroups.Private.tsv", header = T, sep ="\t")
 ```
 
-
-
-<p>Pairwise Wilcoxon rank sum tests can be used to test the significance of the difference in depth between sex chromosome and autosomes, with Bonferroni correction for multiple comparisons.</p>
+<p>Create the framework for a new dataframe summarizing all the gene categories.</p>
 
 ```R
-pairwise.wilcox.test(OnenetDepthFinal$NormDepth, OnenetDepthFinal$Chrom, p.adjust.method = "bonf")
-pairwise.wilcox.test(TwonetDepthFinal$NormDepth, TwonetDepthFinal$Chrom, p.adjust.method = "bonf")
-pairwise.wilcox.test(ThreenetDepthFinal$NormDepth, ThreenetDepthFinal$Chrom, p.adjust.method = "bonf")
-pairwise.wilcox.test(FivenetDepthFinal$NormDepth, FivenetDepthFinal$Chrom, p.adjust.method = "bonf")
-pairwise.wilcox.test(SixnetDepthFinal$NormDepth, SixnetDepthFinal$Chrom, p.adjust.method = "bonf")
+species <- c(rep("AnagrOXF",4), rep("Anfus", 4), rep("Anpun", 4), rep("Ledus", 4), rep("Mefla", 4), rep("Noorb", 4), rep("Papea", 4), rep("Phcar", 4), rep("Phsp", 4), rep("Phchi", 4), rep("Phphy", 4))
+geneType <- c(rep(c("Core", "Peripheral", "Dispensible", "Private"), 11))
+abs <- as.numeric(c(sum(coreDF$AnagrOXF), sum(periDF$AnagrOXF), sum(dispDF$AnagrOXF), sum(privDF$AnagrOXF),
+	sum(coreDF$Anfus), sum(periDF$Anfus), sum(dispDF$Anfus), sum(privDF$Anfus),
+	sum(coreDF$Anpun), sum(periDF$Anpun), sum(dispDF$Anpun), sum(privDF$Anpun),
+	sum(coreDF$Ledus), sum(periDF$Ledus), sum(dispDF$Ledus), sum(privDF$Ledus),
+	sum(coreDF$Mefla), sum(periDF$Mefla), sum(dispDF$Mefla), sum(privDF$Mefla),
+	sum(coreDF$Noorb), sum(periDF$Noorb), sum(dispDF$Noorb), sum(privDF$Noorb),
+	sum(coreDF$Papea), sum(periDF$Papea), sum(dispDF$Papea), sum(privDF$Papea),
+	sum(coreDF$Phcar), sum(periDF$Phcar), sum(dispDF$Phcar), sum(privDF$Phcar),
+	sum(coreDF$Phsp), sum(periDF$Phsp), sum(dispDF$Phsp), sum(privDF$Phsp),
+	sum(coreDF$Phchi), sum(periDF$Phchi), sum(dispDF$Phchi), sum(privDF$Phchi),
+	sum(coreDF$Phphy), sum(periDF$Phphy), sum(dispDF$Phphy), sum(privDF$Phphy)))
 ```
-
-<p>Output:</p>
-
-```R
-	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
-
-data:  OnenetDepthFinal$NormDepth and OnenetDepthFinal$Chrom 
-
-         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
-Phphy.S2 0.0104   -        -        -       
-Phphy.S3 1.0000   1.0000   -        -       
-Phphy.S4 0.0013   1.0000   0.2558   -       
-Phphy.S5 < 2e-16  3.2e-15  < 2e-16  2.5e-13 
-
-P value adjustment method: bonferroni 
-
-
-	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
-
-data:  TwonetDepthFinal$NormDepth and TwonetDepthFinal$Chrom 
-
-         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
-Phphy.S2 0.00021  -        -        -       
-Phphy.S3 0.14290  1.00000  -        -       
-Phphy.S4 0.00013  1.00000  0.68484  -       
-Phphy.S5 < 2e-16  < 2e-16  < 2e-16  < 2e-16 
-
-P value adjustment method: bonferroni 
-
-
-	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
-
-data:  ThreenetDepthFinal$NormDepth and ThreenetDepthFinal$Chrom 
-
-         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
-Phphy.S2 0.12     -        -        -       
-Phphy.S3 1.00     1.00     -        -       
-Phphy.S4 1.00     1.00     1.00     -       
-Phphy.S5 7.6e-15  4.9e-14  3.2e-14  1.4e-13 
-
-P value adjustment method: bonferroni 
-
-
-	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
-
-data:  FivenetDepthFinal$NormDepth and FivenetDepthFinal$Chrom 
-
-         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
-Phphy.S2 0.00119  -        -        -       
-Phphy.S3 0.15792  1.00000  -        -       
-Phphy.S4 0.00077  1.00000  1.00000  -       
-Phphy.S5 < 2e-16  < 2e-16  < 2e-16  < 2e-16 
-
-P value adjustment method: bonferroni 
-
-
-	Pairwise comparisons using Wilcoxon rank sum test with continuity correction 
-
-data:  SixnetDepthFinal$NormDepth and SixnetDepthFinal$Chrom 
-
-         Phphy.S1 Phphy.S2 Phphy.S3 Phphy.S4
-Phphy.S2 0.00017  -        -        -       
-Phphy.S3 0.00560  1.00000  -        -       
-Phphy.S4 0.00031  1.00000  1.00000  -       
-Phphy.S5 < 2e-16  < 2e-16  < 2e-16  < 2e-16 
-
-P value adjustment method: bonferroni 
-```
-
-<p>We observe significantly decreased coverage in just one chromosome, Phphy.S5, as expected if this is the sex chromosome.</p>
 
 </section>
 
