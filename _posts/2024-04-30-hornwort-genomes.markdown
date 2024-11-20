@@ -1017,7 +1017,6 @@ with open("Orthogroups.GeneCount.noTotal.tsv", "r") as infile, open("Orthogroups
 				else:
 					newline.append("0")
 			outfile.write("%s\n" % "\t".join(newline))
-
 		else:
 			outfile.write(line)
 ```
@@ -1076,7 +1075,7 @@ upset(paDF, nsets = 14, nintersects = 12, order.by = "degree", keep.order = T, s
 <img src="/docs/assets/images/Hornwortgenomes_fig5a.png" alt="UpSet plot ordered by degree">
 
 
-<p>To make the bar charts of gene counts with in each category in, read in the categorized files:
+<p>To make the bar charts of gene counts with in each category in, read in the categorized files, including the `Orthogroups_UnassignedGenes.tsv` file produced by OrthoFinder:
 </p>
 
 ```R
@@ -1084,24 +1083,64 @@ coreDF <- read.delim("Orthogroups.Core.tsv", header = T, sep ="\t")
 periDF <- read.delim("Orthogroups.Peripheral.tsv", header = T, sep ="\t")
 dispDF <- read.delim("Orthogroups.Dispensable.tsv", header = T, sep ="\t")
 privDF <- read.delim("Orthogroups.Private.tsv", header = T, sep ="\t")
+unassigned <- read.delim("Orthogroups_UnassignedGenes.txt", header = T, sep="\t")
+
+# rename columns to more manageable names
+colnames(coreDF) <- c("Orthogroups", "AnagrOXF", "Anfus", "Anpun", "Ledus", "Mefla", "Noorb", "Papea", "Phcar", "Phsp", "Phchi", "Phphy")
+colnames(periDF) <- c("Orthogroups", "AnagrOXF", "Anfus", "Anpun", "Ledus", "Mefla", "Noorb", "Papea", "Phcar", "Phsp", "Phchi", "Phphy")
+colnames(dispDF) <- c("Orthogroups", "AnagrOXF", "Anfus", "Anpun", "Ledus", "Mefla", "Noorb", "Papea", "Phcar", "Phsp", "Phchi", "Phphy")
+colnames(privDF) <- c("Orthogroups", "AnagrOXF", "Anfus", "Anpun", "Ledus", "Mefla", "Noorb", "Papea", "Phcar", "Phsp", "Phchi", "Phphy")
+colnames(unassigned) <- c("Orthogroups","AnagrBONN", "Anang" ,"AnagrOXF", "Anfus", "Anpun", "Ledus", "Mefla", "Noorb", "Papea", "Phcar", "Phsp", "Phchi", "Phphy")
 ```
 
-<p>Create the framework for a new dataframe summarizing all the gene categories.</p>
+<p>Create the framework for a new dataframe summarizing all the gene categories. 
+Ours is an odd case because there will be some private genes created by removing A. agrestis Bonn and A. angustus from the analysis, so those are combined with the genes in `Orthogroups_UnassignedGenes.tsv`.</p>
 
 ```R
 species <- c(rep("AnagrOXF",4), rep("Anfus", 4), rep("Anpun", 4), rep("Ledus", 4), rep("Mefla", 4), rep("Noorb", 4), rep("Papea", 4), rep("Phcar", 4), rep("Phsp", 4), rep("Phchi", 4), rep("Phphy", 4))
 geneType <- c(rep(c("Core", "Peripheral", "Dispensible", "Private"), 11))
-abs <- as.numeric(c(sum(coreDF$AnagrOXF), sum(periDF$AnagrOXF), sum(dispDF$AnagrOXF), sum(privDF$AnagrOXF),
-	sum(coreDF$Anfus), sum(periDF$Anfus), sum(dispDF$Anfus), sum(privDF$Anfus),
-	sum(coreDF$Anpun), sum(periDF$Anpun), sum(dispDF$Anpun), sum(privDF$Anpun),
-	sum(coreDF$Ledus), sum(periDF$Ledus), sum(dispDF$Ledus), sum(privDF$Ledus),
-	sum(coreDF$Mefla), sum(periDF$Mefla), sum(dispDF$Mefla), sum(privDF$Mefla),
-	sum(coreDF$Noorb), sum(periDF$Noorb), sum(dispDF$Noorb), sum(privDF$Noorb),
-	sum(coreDF$Papea), sum(periDF$Papea), sum(dispDF$Papea), sum(privDF$Papea),
-	sum(coreDF$Phcar), sum(periDF$Phcar), sum(dispDF$Phcar), sum(privDF$Phcar),
-	sum(coreDF$Phsp), sum(periDF$Phsp), sum(dispDF$Phsp), sum(privDF$Phsp),
-	sum(coreDF$Phchi), sum(periDF$Phchi), sum(dispDF$Phchi), sum(privDF$Phchi),
-	sum(coreDF$Phphy), sum(periDF$Phphy), sum(dispDF$Phphy), sum(privDF$Phphy)))
+
+abs <- as.numeric(c(sum(coreDF$AnagrOXF), sum(periDF$AnagrOXF), sum(dispDF$AnagrOXF), sum(privDF$AnagrOXF)+sum(nzchar(unassigned$AnagrOXF)), 
+                    sum(coreDF$Anfus), sum(periDF$Anfus), sum(dispDF$Anfus), sum(privDF$Anfus)+sum(nzchar(unassigned$Anfus)), 
+                    sum(coreDF$Anpun), sum(periDF$Anpun), sum(dispDF$Anpun), sum(privDF$Anpun)+sum(nzchar(unassigned$Anpun)), 
+                    sum(coreDF$Ledus), sum(periDF$Ledus), sum(dispDF$Ledus), sum(privDF$Ledus)+sum(nzchar(unassigned$Ledus)),
+                    sum(coreDF$Mefla), sum(periDF$Mefla), sum(dispDF$Mefla), sum(privDF$Mefla)+sum(nzchar(unassigned$Mefla)),
+                    sum(coreDF$Noorb), sum(periDF$Noorb), sum(dispDF$Noorb), sum(privDF$Noorb)+sum(nzchar(unassigned$Noorb)),
+                    sum(coreDF$Papea), sum(periDF$Papea), sum(dispDF$Papea), sum(privDF$Papea)+sum(nzchar(unassigned$Papea)),
+                    sum(coreDF$Phcar), sum(periDF$Phcar), sum(dispDF$Phcar), sum(privDF$Phcar)+sum(nzchar(unassigned$Phcar)),
+                    sum(coreDF$Phsp), sum(periDF$Phsp), sum(dispDF$Phsp), sum(privDF$Phsp)+sum(nzchar(unassigned$Phsp)),
+                    sum(coreDF$Phchi), sum(periDF$Phchi), sum(dispDF$Phchi), sum(privDF$Phchi)+sum(nzchar(unassigned$Phchi)),
+                    sum(coreDF$Phphy), sum(periDF$Phphy), sum(dispDF$Phphy), sum(privDF$Phphy)+sum(nzchar(unassigned$Phphy))))
+```
+
+<p>Combine elements into a dataframe. Set species and category factors to plot them in a certain order.</p>
+
+```R
+geneCountsDF<- data.frame(species,geneType,abs)
+colnames(geneCountsDF) <- c("Species","Category","Count")
+geneCountsDF$Species <- factor(geneCountsDF$Species, levels = c("Phphy","Phchi","Mefla","Phsp", "Phcar", "Papea", "Noorb", "Anpun", "Anfus", "AnagrOXF", "Ledus"))
+geneCountsDF$Category <- factor(geneCountsDF$Category, levels = c("Private", "Dispensible", "Peripheral", "Core"))
+```
+
+<p>Plot as stacked bar charts in two ways: absolute counts and as proportion of total.</p>
+
+```R
+percPlot <-  ggplot(data = geneCountsDF, aes(x = Species, y = Count, fill = Category)) +
+  geom_bar(position='fill', stat="identity", show.legend = F) +
+  coord_flip() +
+  theme_bw() +
+  labs(x = "Proportion") +
+  scale_fill_manual(values = wes_palette("Moonrise3", type = 'discrete')) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(), axis.title.y = element_blank())
+
+absPlot <- ggplot(data = geneCountsDF, aes(x = Species, y = Count, fill = Category)) +
+  geom_bar(position='stack', stat="identity", show.legend = T) +
+  coord_flip() +
+  theme_bw() +
+  scale_fill_manual(values = wes_palette("Moonrise3", type = 'discrete')) +
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),axis.title.y=element_blank(), axis.text.y=element_blank(),axis.ticks.y=element_blank())
+
+ggarrange(percPlot, absPlot, nrow=1)
 ```
 
 </section>
