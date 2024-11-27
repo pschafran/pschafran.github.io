@@ -5,7 +5,6 @@ date:   2024-04-30 15:37:17 -0400
 categories: jekyll update
 ---
 <section>
-<p>Intial Post Date: 2024-04-30</p>
 <p>Last Updated: 2024-11-27</p>
 </section>
 
@@ -30,6 +29,7 @@ categories: jekyll update
 		<li><a href="#wgd">Whole Genome Duplication</a></li>
 		<li><a href="#sex-chromosome-mapping">Sex Chromosome Mapping</a></li>
 		<li><a href="#pangenome">Pangenome</a></li>
+		<li><a href="#genome-landscape">Genome Landscape Figures</a></li>
 	</ol>
 </ol>
 </section> <!-- TOC end -->
