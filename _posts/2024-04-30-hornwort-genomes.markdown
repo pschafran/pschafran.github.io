@@ -6,7 +6,7 @@ categories: jekyll update
 ---
 <section>
 <p>Intial Post Date: 2024-04-30</p>
-<p>Last Updated: 2024-06-27</p>
+<p>Last Updated: 2024-11-27</p>
 </section>
 
 <section id="toc">
@@ -15,21 +15,22 @@ categories: jekyll update
 <li><a href = "#abstract">Abstract</a></li>
 <li><a href = "#methods">Methods</a></li>
 	<ol type="a">
-		<li>Sequencing</li>
-		<li>Assembly</li>
-		<li>Scaffolding</li>
-		<li>Decontamination</li>
-		<li>Repeat Annotation</li>
-		<li>Gene Prediction</li>
-		<li>Functional Annotation</li>
-		<li>Methylation</li>
-		<li>Orthogroup Inference</li>
-		<li>Synteny</li>
-		<li>Gene Expression</li>
-		<li>GO Term Enrichment</li>
-		<li>Whole Genome Duplication</li>
+		<li><a href="#sequencing">Sequencing</a></li>
+		<li><a href="#assembly">Assembly</a></li>
+		<li><a href="#scaffolding">Scaffolding</a></li>
+		<li><a href="#decontamination">Decontamination</a></li>
+		<li><a href="#repeat-annotation">Repeat Annotation</a></li>
+		<li><a href="#gene-prediction">Gene Prediction</a></li>
+		<li><a href="#functional-annotation">Functional Annotation</a></li>
+		<li><a href="#methylation">Methylation</a></li>
+		<li><a href="#orthogroups">Orthogroup Inference</a></li>
+		<li><a href="#synteny">Synteny</a></li>
+		<li><a href="#gene-expression">Gene Expression</a></li>
+		<li><a href="#go-enrichment">GO Term Enrichment</a></li>
+		<li><a href="#wgd">Whole Genome Duplication</a></li>
+		<li><a href="#sex-chromosome-mapping">Sex Chromosome Mapping</a></li>
+		<li><a href="#pangenome">Pangenome</a></li>
 	</ol>
-<li><a href = "#results-and-discussion">Results and Discussion</a></li>
 </ol>
 </section> <!-- TOC end -->
 
@@ -70,42 +71,43 @@ categories: jekyll update
 | hisat2 2.2.1 | RNA read mapping | <a href="https://www.nature.com/articles/s41587-019-0201-4">Kim et al. 2019</a>  |
 | fastp 0.20.0 | Short-read adapter/low quality base trimming | <a href="https://academic.oup.com/bioinformatics/article/34/17/i884/5093234">Chen et al. 2018</a>  |
 | porechop 0.2.4 | ONT read adapter trimming | <a href="https://github.com/rrwick/Porechop">Wick 2018</a> |
-| EDTA 2.0.1 | Repeat annotation and analysis |  |
-| Tandem Repeats Finder 4.09.1
-| BRAKER 2.1.5 | Gene prediction |   |
-| EggNOG mapper 2.1.9 | Gene function annotation |   |
-| OrthoFinder 2.5.4 | Gene orthogroup inference   |   |
-| GENESPACE 1.3| Synteny analysis |   |
-| wgd 1.0 | Whole genome duplication analysis |  |
-| CAFE 5| Orthogroup expansion/contraction |  |
-| r8s | Divergence time estimation |  |
-| gffread 0.11.7 | GFF file manipulation | |
-| AGAT | GTF/GFF file conversion | |
-| IQ-TREE 2.0.3 | Phylogenetic inference | |
-| BUSCO 5.2.1 | Assembly completeness test | |
-| Blobtools2 | Assembly contamination identification | | 
-| BlobToolKit 4.1.2 | |
-| BLAST+ toolkit 2.10.0 | Sequence similarity search | |
-| DIAMOND 2.0.15 | Sequence similarity search | |
-| Megalodon 2.5.0 | |
-| bismark 0.24.1 | |
-| RepeatMasker 4.1.0 | |
-| Stringtie 2.1.1 | |
-| Ballgown | |
-| goatools | GO Term enrichment |
-| <a href="https://bioconda.github.io/recipes/pfam_scan/README.html">pfam_scan.pl</a> ||
+| EDTA 2.0.1 | Repeat annotation and analysis | <a href="https://doi.org/10.1186/s13059-019-1905-y">Ou et al. 2019</a> |
+| Tandem Repeats Finder 4.09.1 | Tandem repeat identification  | <a href="https://doi.org/10.1093/nar/27.2.573">Benson 1999</a>  |
+| BRAKER 2.1.5 | Gene prediction | <a href="https://doi.org/10.1093/nargab/lqaa108">Bruna et al. 2021</a>  |
+| EggNOG mapper 2.1.9 | Gene function annotation | <a href="https://doi.org/10.1093/molbev/msab293">Cantalapiedra et al. 2021</a>  |
+| OrthoFinder 2.5.4 | Gene orthogroup inference | <a href="https://doi.org/10.1186/s13059-019-1832-y">Emms and Kelly 2019</a>  |
+| GENESPACE 1.3| Synteny analysis | <a href="https://doi.org/10.7554/eLife.78526">Lovell et al. 2022</a>  |
+| wgd 1.0 | Whole genome duplication analysis | <a href="https://doi.org/10.1093/bioinformatics/bty915">Zwaenepoel and Van de Peer 2019</a> |
+| CAFE 5| Orthogroup expansion/contraction | <a href="https://doi.org/10.1093/bioinformatics/btaa1022">Mendes et al. 2020</a> |
+| r8s | Divergence time estimation | <a href="https://doi.org/10.1093/bioinformatics/19.2.301">Sanderson 2003</a> |
+| gffread 0.11.7 | GFF file manipulation | <a href="https://doi.org/10.12688/f1000research.23297.2">Pertea and Pertea 2020</a> |
+| AGAT | GTF/GFF file conversion | <a href="https://github.com/NBISweden/AGAT">Dainat 2023</a>|
+| IQ-TREE 2.0.3 | Phylogenetic inference | <a href="https://doi.org/10.1093/molbev/msaa015">Minh et al. 2020</a>|
+| BUSCO 5.2.1 | Assembly completeness test | <a href="https://doi.org/10.1002/cpz1.323">Manni et al. 2021</a>|
+| BlobToolKit 4.1.2/Blobtools2 | Assembly contamination identification | <a href="https://doi.org/10.1534/g3.119.400908">Challis et al. 2020</a>| 
+| BLAST+ toolkit 2.10.0 | Sequence similarity search | <a href="https://doi.org/10.1186/1471-2105-10-421">Camacho et al. 2009</a>|
+| DIAMOND 2.0.15 | Sequence similarity search | <a href="https://doi.org/10.1038/s41592-021-01101-x">Buchfink et al. 2021</a>|
+| Megalodon 2.5.0 | ONT modified methylation calling | <a href="https://github.com/nanoporetech/megalodon">Github</a>|
+| bismark 0.24.1 | bisulfite-seq methylation calling | <a href="https://doi.org/10.1093/bioinformatics/btr167">Krueger et al. 2011</a> |
+| RepeatMasker 4.1.0 | Masking repetitive genomic sequence | <a href="http://www.repeatmasker.org">Smit et al. 2013-2015</a>|
+| Stringtie 2.1.1 | Transcriptome assembly | <a href="https://doi.org/10.1186/s13059-019-1910-1">Kovaka et al. 2019</a>|
+| Ballgown | Gene differential expression | <a href="https://doi.org/10.1038/nbt.3172">Frazee et al. 2015</a> |
+| goatools | GO Term enrichment | <a href="https://doi.org/10.1038/s41598-018-28948-z">Klopfenstein et al. 2018</a> |
+| pfam_scan | Protein-family domain annotation | <a href="https://www.ebi.ac.uk/jdispatcher/pfa/pfamscan">EMBL</a> |
 
 </section>
 
+<section id="methods">
 <h2>Methods</h2>
+</section>
 
 <section id="sequencing">
-<h3>2a. Sequencing</h3>
+<h3>Sequencing<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>High molecular weight DNA was sequenced on Oxford Nanopore R9 MinION flowcells and basecalled with Guppy v5 using the dna_r9.4.1_450bps_sup model. </p>
 </section>
 
 <section id="assembly">
-<h3>2b. Assembly</h3>
+<h3>Assembly<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>ONT reads less than 5 kbp were removed and the remainder were assembled with Flye v2.9:</p>
 
 ```shell
@@ -130,7 +132,7 @@ java -Xmx50G -jar pilon-1.24.jar --genome assembly.fasta --frags illumina.bam --
 </section> <!--Assembly end-->
 
 <section id="scaffolding">
-<h3>2c. Scaffolding</h3>
+<h3>Scaffolding<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>HiC libraries were prepared, sequenced, and scaffolded by Phase Genomics (Seattle, WA). TGS-Gapcloser was used to fill gaps between scaffolds with ONT reads and polish filled gaps with Illumina data:</p>
 
 ```shell
@@ -149,7 +151,7 @@ tgsgapcloser --scaff scaffolded_assembly.fasta \
 </section> <!--Scaffolding end-->
 
 <section id="decontamination">
-<h3>2d. Decontamination</h3>
+<h3>Decontamination<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Scaffolded assemblies were checked for contamination using a combination of HiC contact heatmaps and <a href="https://blobtoolkit.genomehubs.org/blobtools2/">BlobTools2</a>. Illumina WGS reads were mapped to each genome with bwa; scaffold sequences were BLASTed against the NCBI nt database. BAM alignment and BLAST output were added into a BlobDir along with each genome.</p>
 
 ```shell
@@ -188,7 +190,7 @@ getFromFasta.py -v scaffolded_assembly.fasta scaffold100 > scaffolded_assembly.n
 </section> <!-- Decontamination end-->
 
 <section id="repeat-annotation">
-<h3>2e. Repeat Annotation</h3>
+<h3>Repeat Annotation<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Repeats were identified in a first pass by EDTA v2:</p>
 
 ```shell
@@ -264,7 +266,7 @@ cat other_repeats.gff trf_out_min50.renamed.gff | sort -k1,1 -k 4,4n > all_repea
 </section> <!--Repeat annotation end-->
 
 <section id="gene-prediction">
-<h3>2f. Gene Prediction</h3>
+<h3>Gene Prediction<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Gene models were predicted using a developement version of BRAKER3 (), with input consisting of Illumina RNA reads mapped to the softmasked genome using HISAT2 () and predicted hornwort proteins from published <i>Anthoceros</i> genomes (Li et al 2020, Zhang et al. 2020). BRAKER output files were screened for genes with in-frame stop codons, which were marked as pseudogenes in the corresponding GTF file. Genes were renamed to contain their respective scaffold/contig name plus a number incremented by 100, restarting at the beginning of each scaffold/contig. Subsets of primary transcripts were created by selecting the longest transcript associated with each gene.
 </p><br>
 <b>Code for mapping RNA reads and running BRAKER and processing output</b><br>
@@ -345,8 +347,8 @@ removeAlternativeTranscripts.py braker.faa
 
 </section> <!--Gene prediction end-->
 
-<section id="functional">
-<h3>2g. Functional Annotation</h3>
+<section id="functional-annotation">
+<h3>Functional Annotation<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Gene functions were predicted using the eggNOG mapper tool by comparison to the eggNOG 5.0 database using default search settings.</p>
 
 ```shell
@@ -366,7 +368,7 @@ pfam_scan.pl -fasta braker.faa \
 </section> <!--Functional annotation end-->
 
 <section id="methylation">
-<h3>2h. Methylation</h3>
+<h3>Methylation<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Methylation was called using Oxford Nanopore Technology's `megalodon`:</p>
 
 ```shell
@@ -505,7 +507,7 @@ ggplot(data = combined, aes(x=V1, y=V2)) +
 </section>
 
 <section id="orthogroups">
-<h3>2i. Orthogroup Inference</h3>
+<h3>Orthogroup Inference<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Orthogroups were constructed with <a href="https://github.com/davidemms/OrthoFinder">Orthofinder 2.5.4</a> using protein sequence input from genomes selected to represent a broad sampling across Viridiplantae. Because each genome and its genes are annotated differently, custom filtering methods were needed for most genomes to create informative sequence IDs and remove alternative transcripts. A selection of methods follow:</p>
 
 
@@ -569,7 +571,7 @@ find . -name "OG*TRIM.fa" | while read i ; do iqtree -s "$i" -T 4 -B 5000 -m TES
 </section>
 
 <section id="synteny">
-<h3>2j. Synteny</h3>
+<h3>Synteny<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <b>Extracting syntenic blocks</b>
 <p>Synteny among hornwort genomes was inferred with GENESPACE. I attempted to run with other bryophyte genomes, but no synteny was found.</p>
 
@@ -623,7 +625,7 @@ grep "AnagrBONN" syntenicBlock_coordinates.csv | grep "AnagrOXF" | sed 's/,/\t/g
 </section> <!--Synteny end-->
 
 <section id="gene-expression">
-<h3>2k. Gene Expression</h3>
+<h3>Gene Expression<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Gene expression was calculated by mapping RNA reads to the respective genome with Hisat2 and analyzed with Stringtie. Hisat2 indexes were built with splice site and exon information generated from the genome's GTF annotation file. The hisat2 script `hisat2_extract_exons.py` was modified to work with GTF files produced by BRAKER.</p>
 
 ```shell
@@ -658,11 +660,45 @@ for i in genome.sample*RNA.bam ; do stringtie -o "$i".stringtie.merged -G string
 </section>
 
 <section id="go-enrichment">
-<h3>2l. GO Term Enrichment</h3>
+<h3>GO Term Enrichment<span style="float: right;"><a href="#toc">Top</a></span></h3>
+<p>GO term enricnment was used to analyse genes found on sex and accessory chromosomes. 
+Goatools was used on GO term files created from eggNOG functional annotations. 
+Statistical signifance cutoff was Bonferroni-corrected p =< 0.05.
+</p>
+
+<p>First, create a table of each gene transcript and its associated GO terms. 
+Convert semicolons into commas.
+</p>
+
+```shell
+cut -f 1,10 Hornwort_functional_annotations.tsv | sed 's/;/,/g' > Hornwort_GO_table.tsv
+```
+
+<p>Create two new text files with transcript IDs. 
+The first file is the "background" with all primary transcripts in a genome. 
+The second file is the "targets" with transcripts to be compared against the background. 
+In this example, I'm comparing an accessory chromosome to the whole genome. 
+It doesn't matter if the full transcript, CDS, or protein file is used since the sequence IDs are the same. 
+The `cut` command is needed to remove FASTA metadata in the sequence ID line and the `sed` command to remove greater-than symbols.
+</p>
+
+```shell
+grep ">" Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fasta | cut -f 1 -d " " | sed 's/>//' > Anthoceros_agrestis_Oxford.background.txt
+grep "AnagrOXF.S6" > Anthoceros_agrestis_Oxford.targets.txt
+```
+
+<p>Run goatools with these files. 
+If you haven't downloaded the GO database, get it from <a href="https://geneontology.org/docs/download-ontology/">here</a> and include the path to it in the command.
+</p>
+
+```shell
+find_enrichment.py --obo ~/Downloads/go-basic.obo --method bonferroni --outfile Anthoceros_agrestis_Oxford.S6.enrichment_results.xlsx Anthoceros_agrestis_Oxford.targets.txt Anthoceros_agrestis_Oxford.background.txt Hornwort_GO_table.tsv
+```
+
 </section>
 
 <section id="wgd">
-<h3>2m. Whole Genome Duplication</h3>
+<h3>Whole Genome Duplication<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p> Whole genome duplication (WGD) was inferred from Ks (synonymous substitution) plots from <a href="https://github.com/arzwa/wgd">wgd</a> (). The input is the CDS sequence fasta containing only primary transcripts. Self-synteny plots were visually inspected for any indication of 2-to-1 syntenic block ratios typical of WGD.</p>
 
 ```shell
@@ -676,7 +712,7 @@ wgd syn -f gene -a ID -ks Anthoceros_agrestis_Oxford_CDS_primary_transcripts.fas
 </section>
 
 <section  id="sex-chromosome-mapping">
-<h3>2n. Sex Chromosome Mapping</h3>
+<h3>Sex Chromosome Mapping<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>Sex chromosomes were inferred by mapping short-read data from 5-6 individuals of each species to the respective reference genome. 
 Data were first filtered to remove organellar reads (which represented up to 50% of raw data) and bacterial contaminants if present, remove PCR duplicates, and then randomly sampled to an equal amount of data (in Mbp). 
 Reads were mapped to the genome and median depth was calculated in each 100 kbp window across the genome. 
@@ -990,7 +1026,7 @@ P value adjustment method: bonferroni
 </section>
 
 <section id="pangenome">
-<h3>Pangenome</h3>
+<h3>Pangenome<span style="float: right;"><a href="#toc">Top</a></span></h3>
 <p>The hornwort phylum-level pangenome classified gene orthogroups based on presence/absence across the phylogeny into traditional pangenome categories of "core" (present in every genome), "peripheral" (present in all but one genome), "dispensable" (present in two to nine genomes), and "private" (present in only one genome). 
 Results were determined from the OrthoFinder analysis of hornwort genomes, with <i>Anthoceros agrestis</i> Bonn and <i>A. angustus</i> removed due to their different gene prediction methods. 
 </p>
@@ -1094,7 +1130,7 @@ colnames(unassigned) <- c("Orthogroups","AnagrBONN", "Anang" ,"AnagrOXF", "Anfus
 ```
 
 <p>Create the framework for a new dataframe summarizing all the gene categories. 
-Ours is an odd case because there will be some private genes created by removing A. agrestis Bonn and A. angustus from the analysis, so those are combined with the genes in `Orthogroups_UnassignedGenes.tsv`.</p>
+Ours is an odd case because there will be some private genes created by removing <i>A. agrestis</i> Bonn and <i>A. angustus</i> from the analysis, so those are combined with the genes in `Orthogroups_UnassignedGenes.tsv` created by OrthoFinder.</p>
 
 ```R
 species <- c(rep("AnagrOXF",4), rep("Anfus", 4), rep("Anpun", 4), rep("Ledus", 4), rep("Mefla", 4), rep("Noorb", 4), rep("Papea", 4), rep("Phcar", 4), rep("Phsp", 4), rep("Phchi", 4), rep("Phphy", 4))
@@ -1142,6 +1178,9 @@ absPlot <- ggplot(data = geneCountsDF, aes(x = Species, y = Count, fill = Catego
 
 ggarrange(percPlot, absPlot, nrow=1)
 ```
+
+<img src="/docs/assets/images/Hornwortgenomes_Fig5c.png" alt="Stacked bar charts of pangenome categories">
+
 
 </section>
 
